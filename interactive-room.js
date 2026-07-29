@@ -1,0 +1,58 @@
+/* EscapeVerse — Archivio 47 interattivo */
+(() => {
+  const legacyStartGame = startGame;
+  const archive = { selectedItem:null, hour:12, minute:0 };
+  const isArchive=()=>selected&&selected.id==='archivio47';
+  const hasItem=name=>state.inventory.some(x=>x.name===name);
+  const selectedIs=name=>archive.selectedItem===name&&hasItem(name);
+  const addNote=text=>{if(!state.notes.includes(text))state.notes.push(text)};
+
+  function addItem(name,icon){if(!hasItem(name))state.inventory.push({name,icon});renderInventory()}
+  function renderInventory(){
+    const box=document.querySelector('#inventoryItems');
+    if(!state.inventory.length){box.innerHTML='<span class="empty">Vuoto</span>';return}
+    box.innerHTML=state.inventory.map(i=>`<button class="inventory-item interactive ${archive.selectedItem===i.name?'selected':''}" data-item="${i.name}"><span>${i.icon}</span>${i.name}</button>`).join('');
+    box.querySelectorAll('[data-item]').forEach(b=>b.onclick=()=>{archive.selectedItem=archive.selectedItem===b.dataset.item?null:b.dataset.item;renderInventory();status(archive.selectedItem?`${archive.selectedItem} selezionato: tocca dove vuoi usarlo`:'Oggetto deselezionato')})
+  }
+  function status(text){const s=document.querySelector('.archive-status');if(!s)return;s.textContent=text;clearTimeout(status.t);status.t=setTimeout(()=>s.textContent='Esamina la stanza e usa gli oggetti dall’inventario',2500)}
+  function scene(){
+    document.querySelector('#sceneBackdrop').style.background='transparent';
+    document.querySelector('#sceneObjects').innerHTML=`<div class="archive-scene"><div class="archive-wall"></div><div class="archive-floor"></div><div class="archive-status">Esamina la stanza e usa gli oggetti dall’inventario</div><button class="archive-hotspot archive-shelf ${state.flags.photo?'solved':''}" data-target="shelf"><span class="emoji">📚</span><small>Scaffale 7</small></button><button class="archive-hotspot archive-clock ${state.flags.clock?'solved':''}" data-target="clock"><span class="emoji">🕰️</span><small>Orologio</small></button><button class="archive-hotspot archive-desk ${state.flags.desk?'solved':''}" data-target="desk"><span class="emoji">🗄️</span><small>Scrivania</small></button><button class="archive-hotspot archive-vent ${state.flags.vent?'solved':''}" data-target="vent"><span class="emoji">▥</span><small>Grata</small></button><button class="archive-hotspot archive-door" data-target="door"><span class="emoji">🚪</span><small>Porta blindata</small></button></div>`;
+    document.querySelectorAll('[data-target]').forEach(b=>b.onclick=()=>({shelf,clock,desk,vent,door}[b.dataset.target])())
+  }
+  function startArchive(){
+    clearInterval(timerId);state={time:selected.minutes*60,hints:3,hintsUsed:0,step:0,inventory:[],notes:[],escaped:false,flags:{photo:false,clock:false,desk:false,vent:false,card:false}};archive.selectedItem=null;archive.hour=12;archive.minute=0;
+    document.querySelector('#gameCase').textContent=selected.case;document.querySelector('#gameTitle').textContent=selected.title;document.querySelector('#hintCount').textContent=3;scene();renderInventory();updateTimer();show('game');
+    timerId=setInterval(()=>{if(state.time>0&&!state.escaped){state.time--;updateTimer()}else if(!state.escaped){clearInterval(timerId);modal('<h2>Tempo scaduto</h2><p>L’archivio si richiude.</p><button id="retryArchive" class="action-btn">Riprova</button>');setTimeout(()=>document.querySelector('#retryArchive').onclick=()=>{closeModal();startArchive()},0)}},1000)
+  }
+  function shelf(){
+    if(state.flags.photo)return modal('<h2>Scaffale 7</h2><div class="object-art">📚</div><p>Hai già recuperato tutto dal fascicolo 47.</p>');
+    modal('<h2>Scaffale 7</h2><div class="object-art">📚</div><p>Quale fascicolo controlli?</p><div class="puzzle-grid"><button class="puzzle-choice" data-file="12">12</button><button class="puzzle-choice" data-file="47">47</button><button class="puzzle-choice" data-file="83">83</button></div><div id="fileResult"></div>');
+    setTimeout(()=>document.querySelectorAll('[data-file]').forEach(b=>b.onclick=()=>{const r=document.querySelector('#fileResult');if(b.dataset.file!=='47'){r.innerHTML='<p class="error">Solo documenti inutili.</p>';return}b.classList.add('correct');r.innerHTML='<p class="success">Trovi quattro pezzi di una fotografia.</p><button id="buildPhoto" class="puzzle-action">RICOMPONI FOTO</button>';document.querySelector('#buildPhoto').onclick=photo}),0)
+  }
+  function photo(){
+    modal('<h2>Fotografia strappata</h2><p>Tocca i pezzi nell’ordine corretto.</p><div class="photo-pieces"><button class="photo-piece" data-piece="1">🕙</button><button class="photo-piece" data-piece="3">4</button><button class="photo-piece" data-piece="2">:</button><button class="photo-piece" data-piece="4">7</button></div><p id="photoMsg" class="muted">Pezzi sistemati: 0/4</p>');let expected=1;
+    setTimeout(()=>document.querySelectorAll('[data-piece]').forEach(p=>p.onclick=()=>{const n=Number(p.dataset.piece);if(n!==expected){expected=1;document.querySelectorAll('[data-piece]').forEach(x=>x.classList.remove('placed'));document.querySelector('#photoMsg').textContent='Ordine errato. Riprova.';return}p.classList.add('placed');expected++;document.querySelector('#photoMsg').textContent=`Pezzi sistemati: ${expected-1}/4`;if(expected===5){state.flags.photo=true;state.step=1;addItem('Foto ricomposta','📷');addNote('La fotografia mostra un orologio fermo alle 10:10 e il numero 47.');scene();setTimeout(()=>modal('<h2>Fotografia ricomposta</h2><div class="object-art">📷</div><div class="clue">L’orologio nella foto segna 10:10. Sul retro: FASCICOLO 47.</div>'),300)}}),0)
+  }
+  function updateClock(){document.querySelector('.clock-hand.hour').style.transform=`rotate(${(archive.hour%12)*30+archive.minute*.5}deg)`;document.querySelector('.clock-hand.minute').style.transform=`rotate(${archive.minute*6}deg)`;document.querySelector('#clockReadout').textContent=`${String(archive.hour).padStart(2,'0')}:${String(archive.minute).padStart(2,'0')}`}
+  function clock(){
+    if(!state.flags.photo)return modal('<h2>Orologio fermo</h2><div class="object-art">🕰️</div><p>Non sai ancora quale ora impostare.</p>');if(state.flags.clock)return modal('<h2>Orologio</h2><p>Lo scomparto è già aperto.</p>');
+    modal('<h2>Orologio fermo</h2><p>Regola manualmente le lancette.</p><div class="clock-puzzle"><div class="clock-face"><div class="clock-hand hour"></div><div class="clock-hand minute"></div><div class="clock-center"></div></div><strong id="clockReadout">12:00</strong><div class="clock-controls"><button id="hourBtn">+ 1 ORA</button><button id="minuteBtn">+ 5 MIN</button></div><button id="confirmClock" class="puzzle-action" style="width:100%;margin-top:10px">CONFERMA ORA</button><p id="clockMsg"></p></div>');
+    setTimeout(()=>{updateClock();document.querySelector('#hourBtn').onclick=()=>{archive.hour=archive.hour%12+1;updateClock()};document.querySelector('#minuteBtn').onclick=()=>{archive.minute=(archive.minute+5)%60;updateClock()};document.querySelector('#confirmClock').onclick=()=>{if(archive.hour===10&&archive.minute===10){state.flags.clock=true;state.step=2;addItem('Chiave piccola','🗝️');addNote('L’orologio ha liberato una piccola chiave.');scene();document.querySelector('#clockMsg').innerHTML='<span class="success">Scatto metallico: compare una chiave.</span>'}else document.querySelector('#clockMsg').innerHTML='<span class="error">Non accade nulla.</span>'}},0)
+  }
+  function desk(){
+    if(state.flags.desk)return modal('<h2>Scrivania</h2><p>Il cassetto è vuoto.</p>');if(!hasItem('Chiave piccola'))return modal('<h2>Scrivania chiusa</h2><div class="object-art">🗄️</div><p>Serve una chiave piccola.</p>');if(!selectedIs('Chiave piccola'))return modal('<h2>Scrivania chiusa</h2><p class="tool-warning">Seleziona la chiave nell’inventario e tocca di nuovo la scrivania.</p>');state.flags.desk=true;state.step=3;archive.selectedItem=null;addItem('Cacciavite','🪛');addNote('Nella scrivania hai trovato un cacciavite.');scene();modal('<h2>Cassetto aperto</h2><div class="object-art">🪛</div><p class="tool-success">Trovi un cacciavite.</p>')
+  }
+  function vent(){
+    if(state.flags.vent)return modal('<h2>Grata rimossa</h2><p>Il vano è vuoto.</p>');if(!hasItem('Cacciavite'))return modal('<h2>Grata avvitata</h2><div class="object-art">▥</div><p>Le viti non si muovono a mano.</p>');if(!selectedIs('Cacciavite'))return modal('<h2>Grata avvitata</h2><p class="tool-warning">Seleziona il cacciavite nell’inventario e usalo qui.</p>');state.flags.vent=true;state.flags.card=true;state.step=4;archive.selectedItem=null;addItem('Tessera 47','💳');addNote('Dietro la grata trovi una tessera. Sul retro: “Il fascicolo precede il tempo”.');scene();modal('<h2>Vano segreto</h2><div class="object-art">💳</div><p class="tool-success">Trovi una tessera. Sul retro: “Il fascicolo precede il tempo”.</p>')
+  }
+  function door(){
+    if(!state.flags.card)return modal('<h2>Porta blindata</h2><div class="object-art">🚪</div><p>Il lettore richiede una tessera.</p>');if(!selectedIs('Tessera 47'))return modal('<h2>Porta blindata</h2><p class="tool-warning">Seleziona la Tessera 47 nell’inventario e avvicinala al lettore.</p>');
+    modal('<h2>Accesso finale</h2><div class="object-art">🚪</div><p>Inserisci il codice seguendo: <strong>“Il fascicolo precede il tempo”</strong>.</p><div class="code-input"><input id="archiveCode" inputmode="numeric" maxlength="4" placeholder="0000"><button id="archiveUnlock">SBLOCCA</button></div><div id="archiveCodeMsg"></div>');setTimeout(()=>document.querySelector('#archiveUnlock').onclick=()=>{if(document.querySelector('#archiveCode').value==='4710'){archive.selectedItem=null;finish()}else document.querySelector('#archiveCodeMsg').innerHTML='<p class="error">Codice errato.</p>'},0)
+  }
+  function archiveHint(){if(!isArchive())return hint();if(state.hints<=0)return modal('<h2>Nessun indizio rimasto</h2><p>Rileggi gli appunti.</p>');const h=['Cerca il fascicolo indicato nel nome della stanza.','La fotografia mostra l’ora da impostare.','Seleziona la chiave prima di toccare la scrivania.','Seleziona il cacciavite e usalo sulla grata.','Il codice finale è 47 seguito dalle prime due cifre dell’orario.'];state.hints--;state.hintsUsed++;document.querySelector('#hintCount').textContent=state.hints;modal(`<h2>Indizio</h2><p>${h[Math.min(state.step,h.length-1)]}</p>`)}
+
+  document.querySelector('#playBtn').onclick=()=>isArchive()?startArchive():legacyStartGame();
+  document.querySelector('#hintBtn').onclick=archiveHint;
+  document.querySelector('#notesBtn').onclick=()=>modal(`<h2>Appunti</h2><p>${state&&state.notes.length?state.notes.map(x=>'• '+x).join('<br><br>'):'Non hai ancora trovato indizi.'}</p>`);
+})();
