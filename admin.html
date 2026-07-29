@@ -10,91 +10,56 @@
 </head>
 <body>
   <main class="admin-shell">
-    <section id="setupState" class="panel state-card hidden">
-      <div class="logo">EV</div>
-      <p class="eyebrow">CONFIGURAZIONE RICHIESTA</p>
-      <h1>Collega Firebase</h1>
-      <p>Il pannello è pronto, ma per un accesso amministratore realmente sicuro bisogna inserire la configurazione del progetto Firebase nel file <code>firebase-config.js</code>.</p>
-      <a class="button" href="index.html">Torna a EscapeVerse</a>
-    </section>
+    <section id="setupState" class="panel state-card hidden"><div class="logo">EV</div><p class="eyebrow">CONFIGURAZIONE RICHIESTA</p><h1>Collega Firebase</h1><p>La configurazione Firebase non è ancora completa.</p><a class="button" href="index.html">Torna a EscapeVerse</a></section>
 
     <section id="loginState" class="panel login-card hidden">
-      <div class="logo">EV</div>
-      <p class="eyebrow">AREA RISERVATA</p>
-      <h1>Accesso amministratore</h1>
+      <div class="logo">EV</div><p class="eyebrow">AREA RISERVATA</p><h1>Accesso amministratore</h1>
       <p class="muted">Accedi con l’account autorizzato per gestire EscapeVerse.</p>
       <form id="loginForm">
-        <label>Email<input id="email" type="email" autocomplete="username" required></label>
-        <label>Password<input id="password" type="password" autocomplete="current-password" minlength="8" required></label>
+        <label>Email<input id="email" type="email" autocomplete="username" value="alessandro.valerio03@gmail.com" required></label>
+        <label>Password<input id="password" type="password" autocomplete="current-password" minlength="6" required></label>
         <button class="button" type="submit">ACCEDI</button>
       </form>
-      <p id="loginError" class="error" role="alert"></p>
-      <a class="back-link" href="index.html">← Torna al gioco</a>
+      <button id="resetPasswordBtn" class="secondary">Password dimenticata</button>
+      <p id="loginError" class="error" role="alert"></p><a class="back-link" href="index.html">← Torna al gioco</a>
     </section>
 
-    <section id="deniedState" class="panel state-card hidden">
-      <div class="logo danger">!</div>
-      <p class="eyebrow">ACCESSO NEGATO</p>
-      <h1>Account non autorizzato</h1>
-      <p>Questo account esiste, ma non possiede il ruolo amministratore.</p>
-      <button id="deniedLogout" class="button secondary">Esci</button>
-    </section>
+    <section id="deniedState" class="panel state-card hidden"><div class="logo danger">!</div><p class="eyebrow">ACCESSO NEGATO</p><h1>Account non autorizzato</h1><p>Questo account non possiede il ruolo amministratore attivo.</p><button id="deniedLogout" class="button secondary">Esci</button></section>
 
     <section id="dashboardState" class="dashboard hidden">
-      <header class="admin-topbar">
-        <div class="brand"><span class="logo small">EV</span><div><strong>EscapeVerse</strong><span>Pannello amministratore</span></div></div>
-        <button id="logoutBtn" class="secondary compact">Esci</button>
-      </header>
-
+      <header class="admin-topbar"><div class="brand"><span class="logo small">EV</span><div><strong>EscapeVerse</strong><span>Pannello amministratore</span></div></div><button id="logoutBtn" class="secondary compact">Esci</button></header>
       <div class="dashboard-wrap">
-        <section class="welcome">
-          <p class="eyebrow">CONTROLLO GENERALE</p>
-          <h1>Ciao, Alessandro</h1>
-          <p id="adminEmail" class="muted"></p>
+        <section class="welcome"><p class="eyebrow">CONTROLLO GENERALE</p><h1>Ciao, Alessandro</h1><p id="adminEmail" class="muted"></p></section>
+        <section class="stats-grid">
+          <article><span>Escape room</span><strong id="statRooms">0</strong><small>nel database</small></article>
+          <article><span>Giocatori</span><strong id="statUsers">0</strong><small>profili</small></article>
+          <article><span>Completamenti</span><strong id="statCompletions">0</strong><small>totali</small></article>
+          <article><span>Stato</span><strong class="online">Online</strong><small>Firebase attivo</small></article>
         </section>
 
-        <section class="stats-grid">
-          <article><span>Escape room</span><strong>12</strong><small>pubblicate</small></article>
-          <article><span>Difficoltà</span><strong>4</strong><small>categorie</small></article>
-          <article><span>Temi</span><strong>4</strong><small>disponibili</small></article>
-          <article><span>Stato</span><strong class="online">Online</strong><small>GitHub Pages</small></article>
+        <section class="admin-card">
+          <div class="card-icon">🧩</div><h2>Gestione escape room</h2><p>Crea e modifica le stanze salvate su Firestore.</p>
+          <form id="roomForm">
+            <input id="roomId" type="hidden">
+            <label>Titolo<input id="roomTitle" required></label>
+            <label>Tema<select id="roomTheme"><option value="mistero">Mistero</option><option value="horror">Horror</option><option value="avventura">Avventura</option><option value="fantascienza">Fantascienza</option></select></label>
+            <label>Difficoltà<select id="roomDifficulty"><option value="facile">Facile</option><option value="intermedio">Intermedio</option><option value="difficile">Difficile</option><option value="incubo">Incubo</option></select></label>
+            <label>Durata in minuti<input id="roomMinutes" type="number" min="5" max="180" value="15" required></label>
+            <label>Descrizione<textarea id="roomDescription" rows="3" required></textarea></label>
+            <label><input id="roomPublished" type="checkbox" checked> Pubblicata</label>
+            <button class="button" type="submit">SALVA STANZA</button><button id="cancelEditBtn" class="secondary hidden" type="button">Annulla modifica</button>
+          </form>
+          <div id="roomsList" class="data-list"></div>
         </section>
 
         <section class="admin-grid">
-          <article class="admin-card">
-            <div class="card-icon">🧩</div>
-            <h2>Gestione escape room</h2>
-            <p>Crea, modifica, ordina, pubblica o nascondi le stanze.</p>
-            <button class="secondary" data-coming="rooms">Apri gestione</button>
-          </article>
-          <article class="admin-card">
-            <div class="card-icon">👥</div>
-            <h2>Giocatori</h2>
-            <p>Qui verranno gestiti gli account degli utenti e i loro progressi.</p>
-            <button class="secondary" data-coming="users">In preparazione</button>
-          </article>
-          <article class="admin-card">
-            <div class="card-icon">📊</div>
-            <h2>Statistiche</h2>
-            <p>Completamenti, tempi medi, abbandoni e stanze più giocate.</p>
-            <button class="secondary" data-coming="stats">In preparazione</button>
-          </article>
-          <article class="admin-card">
-            <div class="card-icon">⚙️</div>
-            <h2>Impostazioni</h2>
-            <p>Nome dell’app, manutenzione, annunci e configurazioni generali.</p>
-            <button class="secondary" data-coming="settings">Apri impostazioni</button>
-          </article>
+          <article class="admin-card"><div class="card-icon">👥</div><h2>Giocatori</h2><p>I profili registrati appariranno qui.</p><div id="usersList" class="data-list"></div></article>
+          <article class="admin-card"><div class="card-icon">⚙️</div><h2>Impostazioni</h2><form id="settingsForm"><label>Messaggio globale<input id="globalMessage" placeholder="Nessun messaggio"></label><label><input id="maintenanceMode" type="checkbox"> Modalità manutenzione</label><button class="button" type="submit">SALVA IMPOSTAZIONI</button></form></article>
         </section>
-
-        <section class="security-note">
-          <strong>🔐 Sicurezza</strong>
-          <p>Il ruolo admin viene verificato su Firestore tramite l’UID Firebase. Nessuna password amministratore viene salvata nel repository pubblico.</p>
-        </section>
+        <section class="security-note"><strong>🔐 Sicurezza</strong><p>L’accesso è verificato tramite Firebase Authentication e il documento <code>admins/{uid}</code> in Firestore.</p></section>
       </div>
     </section>
   </main>
-
   <div id="toast" class="toast hidden"></div>
   <script type="module" src="admin.js"></script>
 </body>
