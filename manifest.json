@@ -1,0 +1,9 @@
+{
+  "name": "Archivio 47 — Escape Room",
+  "short_name": "Archivio 47",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#07090d",
+  "theme_color": "#090b10",
+  "description": "Escape room narrativa interattiva."
+}
