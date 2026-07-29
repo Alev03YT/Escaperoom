@@ -1,41 +1,44 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    function signedIn() {
-      return request.auth != null;
-    }
-
+    function signedIn() { return request.auth != null; }
     function isAdmin() {
       return signedIn()
         && exists(/databases/$(database)/documents/admins/$(request.auth.uid))
         && get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.active == true;
     }
 
-    // Ogni amministratore può leggere soltanto il proprio record ruolo.
     match /admins/{uid} {
       allow read: if signedIn() && request.auth.uid == uid;
       allow write: if false;
     }
 
-    // Configurazioni e contenuti gestibili soltanto dagli amministratori.
     match /rooms/{roomId} {
-      allow read: if true;
+      allow read: if resource.data.published == true || isAdmin();
       allow create, update, delete: if isAdmin();
     }
 
-    match /settings/{documentId} {
-      allow read: if true;
-      allow create, update, delete: if isAdmin();
-    }
-
-    // Predisposizione per i futuri account giocatore.
     match /users/{uid} {
-      allow read, create, update: if signedIn() && request.auth.uid == uid;
-      allow delete: if false;
+      allow create: if signedIn() && request.auth.uid == uid;
+      allow read, update: if signedIn() && (request.auth.uid == uid || isAdmin());
+      allow delete: if isAdmin();
     }
 
-    match /{document=**} {
-      allow read, write: if false;
+    match /progress/{uid}/rooms/{roomId} {
+      allow read, write: if signedIn() && (request.auth.uid == uid || isAdmin());
     }
+
+    match /completions/{completionId} {
+      allow create: if signedIn() && request.resource.data.uid == request.auth.uid;
+      allow read: if isAdmin() || (signedIn() && resource.data.uid == request.auth.uid);
+      allow update, delete: if isAdmin();
+    }
+
+    match /settings/public {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /{document=**} { allow read, write: if false; }
   }
 }
