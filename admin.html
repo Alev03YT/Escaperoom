@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#080b12">
+  <meta name="robots" content="noindex,nofollow">
+  <title>EscapeVerse — Pannello Admin</title>
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+  <main class="admin-shell">
+    <section id="setupState" class="panel state-card hidden">
+      <div class="logo">EV</div>
+      <p class="eyebrow">CONFIGURAZIONE RICHIESTA</p>
+      <h1>Collega Firebase</h1>
+      <p>Il pannello è pronto, ma per un accesso amministratore realmente sicuro bisogna inserire la configurazione del progetto Firebase nel file <code>firebase-config.js</code>.</p>
+      <a class="button" href="index.html">Torna a EscapeVerse</a>
+    </section>
+
+    <section id="loginState" class="panel login-card hidden">
+      <div class="logo">EV</div>
+      <p class="eyebrow">AREA RISERVATA</p>
+      <h1>Accesso amministratore</h1>
+      <p class="muted">Accedi con l’account autorizzato per gestire EscapeVerse.</p>
+      <form id="loginForm">
+        <label>Email<input id="email" type="email" autocomplete="username" required></label>
+        <label>Password<input id="password" type="password" autocomplete="current-password" minlength="8" required></label>
+        <button class="button" type="submit">ACCEDI</button>
+      </form>
+      <p id="loginError" class="error" role="alert"></p>
+      <a class="back-link" href="index.html">← Torna al gioco</a>
+    </section>
+
+    <section id="deniedState" class="panel state-card hidden">
+      <div class="logo danger">!</div>
+      <p class="eyebrow">ACCESSO NEGATO</p>
+      <h1>Account non autorizzato</h1>
+      <p>Questo account esiste, ma non possiede il ruolo amministratore.</p>
+      <button id="deniedLogout" class="button secondary">Esci</button>
+    </section>
+
+    <section id="dashboardState" class="dashboard hidden">
+      <header class="admin-topbar">
+        <div class="brand"><span class="logo small">EV</span><div><strong>EscapeVerse</strong><span>Pannello amministratore</span></div></div>
+        <button id="logoutBtn" class="secondary compact">Esci</button>
+      </header>
+
+      <div class="dashboard-wrap">
+        <section class="welcome">
+          <p class="eyebrow">CONTROLLO GENERALE</p>
+          <h1>Ciao, Alessandro</h1>
+          <p id="adminEmail" class="muted"></p>
+        </section>
+
+        <section class="stats-grid">
+          <article><span>Escape room</span><strong>12</strong><small>pubblicate</small></article>
+          <article><span>Difficoltà</span><strong>4</strong><small>categorie</small></article>
+          <article><span>Temi</span><strong>4</strong><small>disponibili</small></article>
+          <article><span>Stato</span><strong class="online">Online</strong><small>GitHub Pages</small></article>
+        </section>
+
+        <section class="admin-grid">
+          <article class="admin-card">
+            <div class="card-icon">🧩</div>
+            <h2>Gestione escape room</h2>
+            <p>Crea, modifica, ordina, pubblica o nascondi le stanze.</p>
+            <button class="secondary" data-coming="rooms">Apri gestione</button>
+          </article>
+          <article class="admin-card">
+            <div class="card-icon">👥</div>
+            <h2>Giocatori</h2>
+            <p>Qui verranno gestiti gli account degli utenti e i loro progressi.</p>
+            <button class="secondary" data-coming="users">In preparazione</button>
+          </article>
+          <article class="admin-card">
+            <div class="card-icon">📊</div>
+            <h2>Statistiche</h2>
+            <p>Completamenti, tempi medi, abbandoni e stanze più giocate.</p>
+            <button class="secondary" data-coming="stats">In preparazione</button>
+          </article>
+          <article class="admin-card">
+            <div class="card-icon">⚙️</div>
+            <h2>Impostazioni</h2>
+            <p>Nome dell’app, manutenzione, annunci e configurazioni generali.</p>
+            <button class="secondary" data-coming="settings">Apri impostazioni</button>
+          </article>
+        </section>
+
+        <section class="security-note">
+          <strong>🔐 Sicurezza</strong>
+          <p>Il ruolo admin viene verificato su Firestore tramite l’UID Firebase. Nessuna password amministratore viene salvata nel repository pubblico.</p>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <div id="toast" class="toast hidden"></div>
+  <script type="module" src="admin.js"></script>
+</body>
+</html>
