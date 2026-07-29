@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="robots" content="noindex,nofollow">
+  <title>EscapeVerse — Attiva Admin</title>
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+  <main class="admin-shell">
+    <section class="panel login-card">
+      <div class="logo">EV</div>
+      <p class="eyebrow">ATTIVAZIONE UNA TANTUM</p>
+      <h1>Attiva il tuo account admin</h1>
+      <p class="muted">Accedi con <strong>alessandro.valerio03@gmail.com</strong>. Il sistema verificherà automaticamente email e UID prima di creare il ruolo amministratore.</p>
+      <form id="activateForm">
+        <label>Email<input id="email" type="email" autocomplete="username" value="alessandro.valerio03@gmail.com" readonly></label>
+        <label>Password<input id="password" type="password" autocomplete="current-password" minlength="8" required></label>
+        <button class="button" type="submit">ATTIVA ACCOUNT ADMIN</button>
+      </form>
+      <p id="message" class="error" role="alert"></p>
+      <a class="back-link" href="admin.html">← Torna al pannello</a>
+    </section>
+  </main>
+  <script type="module" src="activate-admin.js"></script>
+</body>
+</html>
