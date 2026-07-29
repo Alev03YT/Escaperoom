@@ -24,10 +24,16 @@
       <p id="loginError" class="error" role="alert"></p><a class="back-link" href="index.html">← Torna al gioco</a>
     </section>
 
-    <section id="deniedState" class="panel state-card hidden"><div class="logo danger">!</div><p class="eyebrow">ACCESSO NEGATO</p><h1>Account non autorizzato</h1><p>Questo account non possiede il ruolo amministratore attivo.</p><button id="deniedLogout" class="button secondary">Esci</button></section>
+    <section id="deniedState" class="panel state-card hidden"><div class="logo danger">!</div><p class="eyebrow">ACCESSO NEGATO</p><h1>Account non autorizzato</h1><p>Questo account non possiede il ruolo amministratore attivo.</p><a class="button" href="index.html">Torna a EscapeVerse</a><button id="deniedLogout" class="button secondary">Esci</button></section>
 
     <section id="dashboardState" class="dashboard hidden">
-      <header class="admin-topbar"><div class="brand"><span class="logo small">EV</span><div><strong>EscapeVerse</strong><span>Pannello amministratore</span></div></div><button id="logoutBtn" class="secondary compact">Esci</button></header>
+      <header class="admin-topbar">
+        <div class="brand"><span class="logo small">EV</span><div><strong>EscapeVerse</strong><span>Pannello amministratore</span></div></div>
+        <nav class="admin-actions" aria-label="Navigazione amministratore">
+          <a class="secondary compact home-button" href="index.html">🏠 <span>Torna al sito</span></a>
+          <button id="logoutBtn" class="secondary compact">🚪 <span>Esci</span></button>
+        </nav>
+      </header>
       <div class="dashboard-wrap">
         <section class="welcome"><p class="eyebrow">CONTROLLO GENERALE</p><h1>Ciao, Alessandro</h1><p id="adminEmail" class="muted"></p></section>
         <section class="stats-grid">
