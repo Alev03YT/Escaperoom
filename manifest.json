@@ -1,9 +1,9 @@
 {
-  "name": "Archivio 47 — Escape Room",
-  "short_name": "Archivio 47",
+  "name": "EscapeVerse — Escape Room Interattive",
+  "short_name": "EscapeVerse",
   "start_url": "./",
   "display": "standalone",
-  "background_color": "#07090d",
-  "theme_color": "#090b10",
-  "description": "Escape room narrativa interattiva."
+  "background_color": "#070a10",
+  "theme_color": "#080b12",
+  "description": "Una raccolta di escape room narrative divise per tema e difficoltà."
 }
