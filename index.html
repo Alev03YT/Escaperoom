@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#090b10">
+  <title>Archivio 47 — Escape Room</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="app">
+    <section id="intro" class="screen active">
+      <div class="noise"></div>
+      <div class="intro-card">
+        <div class="eyebrow">CASO RISERVATO • 02:17</div>
+        <h1>ARCHIVIO <span>47</span></h1>
+        <p>Ti risvegli in un archivio sotterraneo. La porta è bloccata. Un registratore continua a ripetere una frase:</p>
+        <blockquote>“Non cercare la chiave. Cerca ciò che la chiave ricorda.”</blockquote>
+        <button id="startBtn" class="primary">ENTRA NELL'ARCHIVIO</button>
+        <button id="continueBtn" class="secondary hidden">CONTINUA PARTITA</button>
+        <p class="small">Prototipo gratuito • Durata stimata 10–15 minuti</p>
+      </div>
+    </section>
+
+    <section id="game" class="screen">
+      <header>
+        <div>
+          <span class="case">ARCHIVIO 47</span>
+          <strong id="roomName">Sala documenti</strong>
+        </div>
+        <div class="timer" id="timer">15:00</div>
+      </header>
+
+      <main class="scene" id="scene">
+        <div class="ambient"></div>
+        <div class="room room-main" id="roomVisual">
+          <button class="hotspot shelf" data-action="shelf" aria-label="Scaffale"></button>
+          <button class="hotspot desk" data-action="desk" aria-label="Scrivania"></button>
+          <button class="hotspot clock" data-action="clock" aria-label="Orologio"></button>
+          <button class="hotspot door" data-action="door" aria-label="Porta"></button>
+          <button class="hotspot vent" data-action="vent" aria-label="Grata"></button>
+          <div class="flicker"></div>
+        </div>
+        <div class="look-hint">Tocca gli oggetti per esaminarli</div>
+      </main>
+
+      <aside class="inventory">
+        <div class="inventory-title">INVENTARIO</div>
+        <div id="inventoryItems" class="inventory-items">
+          <span class="empty">Vuoto</span>
+        </div>
+      </aside>
+
+      <nav>
+        <button id="hintBtn">💡 Indizio <span id="hintCount">3</span></button>
+        <button id="notesBtn">🗒️ Appunti</button>
+        <button id="soundBtn">🔊 Audio</button>
+      </nav>
+    </section>
+
+    <div id="modal" class="modal hidden">
+      <div class="modal-card">
+        <button id="closeModal" class="close">×</button>
+        <div id="modalContent"></div>
+      </div>
+    </div>
+
+    <section id="ending" class="screen">
+      <div class="noise"></div>
+      <div class="intro-card">
+        <div class="eyebrow">ACCESSO AUTORIZZATO</div>
+        <h1>SEI USCITO</h1>
+        <p id="endingText"></p>
+        <div class="ending-stats">
+          <div><strong id="finalTime">00:00</strong><span>Tempo rimasto</span></div>
+          <div><strong id="finalHints">0</strong><span>Indizi usati</span></div>
+        </div>
+        <button id="restartBtn" class="primary">RIGIOCA</button>
+      </div>
+    </section>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
