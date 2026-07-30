@@ -1,5 +1,6 @@
-/* Chiusura sicura delle stanze EscapeVerse 1.0 */
+/* Metadati e chiusura sicura delle stanze EscapeVerse 1.0 */
 (() => {
+  if(typeof rooms!=='undefined')rooms.forEach(room=>room.puzzles=5);
   let scheduled=false;
   const observer=new MutationObserver(()=>{
     if(scheduled||typeof state==='undefined'||!state||state.escaped||typeof selected==='undefined'||!selected||selected.id==='archivio47')return;
