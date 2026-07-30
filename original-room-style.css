@@ -1,0 +1,60 @@
+/* EscapeVerse — ritorno allo stile del prototipo originale
+   Gli oggetti fanno parte della stanza; i pulsanti sono hotspot invisibili. */
+
+/* Base condivisa */
+.immersive-scene,.v1-scene{background:#090b10!important;perspective:1000px}
+.immersive-room,.v1-wall{left:0!important;right:0!important;top:0!important;bottom:0!important;border:0!important;border-radius:0!important;box-shadow:inset 0 0 130px #000!important;background:
+radial-gradient(circle at 50% 14%,rgba(235,210,156,.12),transparent 23%),
+linear-gradient(90deg,rgba(0,0,0,.72),transparent 19%,transparent 81%,rgba(0,0,0,.72)),
+repeating-linear-gradient(90deg,#191f27 0 12%,#11161d 12% 13%,#202732 13% 25%)!important}
+.immersive-floor,.v1-floor{left:-20%!important;right:-20%!important;bottom:-17%!important;height:40%!important;background:repeating-linear-gradient(90deg,#12100f 0 12%,#211a16 12% 24%)!important;transform:rotateX(63deg)!important;box-shadow:inset 0 42px 75px #000!important}
+.immersive-scene:before,.v1-scene:before{content:"";position:absolute;left:50%;top:0;width:3px;height:17%;background:#282828;transform:translateX(-50%);z-index:2}
+.immersive-scene:after,.v1-scene:after{content:"";position:absolute;left:50%;top:14%;width:105px;height:25px;border-radius:50%;background:#2a261f;transform:translateX(-50%);box-shadow:0 18px 58px 28px rgba(226,197,132,.12);z-index:2;pointer-events:none}
+
+/* Hotspot originali: nessuna tessera, nessuna etichetta fissa */
+.room-hotspot,.v1-object{border:0!important;background:transparent!important;border-radius:0!important;box-shadow:none!important;backdrop-filter:none!important;display:block!important;overflow:visible!important;filter:drop-shadow(0 14px 18px rgba(0,0,0,.72));transition:filter .2s,transform .2s,opacity .2s}
+.room-hotspot:before,.v1-object:before{content:"";position:absolute;inset:-7px;border:1px solid transparent;border-radius:10px;transition:.2s}
+.room-hotspot:hover:before,.room-hotspot:focus-visible:before,.v1-object:hover:before,.v1-object:focus-visible:before{border-color:rgba(225,198,139,.35);box-shadow:0 0 24px rgba(225,198,139,.12)}
+.room-hotspot:hover,.v1-object:hover{transform:none!important}
+.room-object,.v1-object-art{font-size:0!important;color:transparent!important;display:none!important}
+.room-hotspot small,.v1-object-label{position:absolute!important;left:50%;top:auto!important;bottom:-25px;transform:translateX(-50%);width:max-content;max-width:150px;padding:5px 9px;border-radius:99px;background:rgba(0,0,0,.76);color:#d9d9d9;font-size:.55rem!important;font-weight:750;letter-spacing:.04em;text-transform:uppercase;opacity:0;pointer-events:none;transition:.2s}
+.room-hotspot:focus-visible small,.room-hotspot:active small,.v1-object:focus-visible .v1-object-label,.v1-object:active .v1-object-label{opacity:1}
+
+/* Oggetti fisici generici integrati nella scena */
+.room-hotspot:nth-of-type(1),.v1-object.object-1{left:5%!important;top:20%!important;width:29%!important;height:49%!important}
+.room-hotspot:nth-of-type(1):after,.v1-object.object-1:after{content:"";position:absolute;inset:0;border:8px solid #15100d;background:
+linear-gradient(#17110e 0 3%,transparent 3% 31%,#17110e 31% 34%,transparent 34% 64%,#17110e 64% 67%,transparent 67%),
+repeating-linear-gradient(90deg,#52312b 0 8%,#252e38 8% 15%,#6a3036 15% 23%,#33251f 23% 31%);box-shadow:inset 0 0 35px #000,10px 18px 30px #000}
+.room-hotspot:nth-of-type(2),.v1-object.object-2{left:42%!important;top:17%!important;width:16%!important;height:18%!important}
+.room-hotspot:nth-of-type(2):after,.v1-object.object-2:after{content:"";position:absolute;left:5%;top:0;width:90%;aspect-ratio:1;border:7px solid #6e5430;border-radius:50%;background:radial-gradient(circle,#d8cfb7 0 58%,#957a4c 59% 67%,#211b14 68%);box-shadow:0 12px 26px #000,inset 0 0 12px #4b3d26}
+.room-hotspot:nth-of-type(2):before,.v1-object.object-2:before{z-index:3;background:linear-gradient(90deg,transparent 49%,#211b16 49% 52%,transparent 52%);clip-path:polygon(48% 17%,52% 17%,52% 51%,74% 42%,76% 47%,50% 55%)}
+.room-hotspot:nth-of-type(3),.v1-object.object-3{right:5%!important;left:auto!important;top:41%!important;width:31%!important;height:29%!important}
+.room-hotspot:nth-of-type(3):after,.v1-object.object-3:after{content:"";position:absolute;inset:0;border:6px solid #17110e;background:linear-gradient(#4a3428 0 15%,#2c211b 15%);box-shadow:inset 0 0 26px #000,10px 16px 28px #000}
+.room-hotspot:nth-of-type(3):before,.v1-object.object-3:before{z-index:2;inset:22% 8% 16% 54%;border:2px solid #17110e;border-radius:0;background:linear-gradient(#39291f 0 48%,#17110e 48% 52%,#39291f 52%);box-shadow:none}
+.room-hotspot:nth-of-type(4),.v1-object.object-4{left:27%!important;bottom:13%!important;top:auto!important;width:20%!important;height:13%!important}
+.room-hotspot:nth-of-type(4):after,.v1-object.object-4:after{content:"";position:absolute;inset:0;border:6px solid #353b42;background:repeating-linear-gradient(90deg,#080a0c 0 8%,#8b9298 8% 11%,#080a0c 11% 19%);box-shadow:0 9px 20px #000,inset 0 0 12px #000}
+.room-hotspot:nth-of-type(5),.v1-object.object-5{right:13%!important;left:auto!important;bottom:7%!important;top:auto!important;width:23%!important;height:45%!important}
+.room-hotspot:nth-of-type(5):after,.v1-object.object-5:after{content:"";position:absolute;inset:0;border:8px solid #11151a;background:linear-gradient(90deg,#30363c,#181d22 48%,#343a40);box-shadow:inset 0 0 45px #000,12px 18px 32px #000}
+
+/* Temi: cambiano materiali e atmosfera senza tornare alle card */
+.theme-motel .v1-wall,.theme-hotel .v1-wall,.immersive-scene[data-theme="horror"] .immersive-room{background:radial-gradient(circle at 50% 14%,rgba(164,68,53,.14),transparent 25%),repeating-linear-gradient(90deg,#261819 0 11%,#150d10 11% 12%,#301e20 12% 24%)!important}
+.theme-lab .v1-wall,.theme-space .v1-wall,.immersive-scene[data-theme="fantascienza"] .immersive-room{background:radial-gradient(circle at 50% 13%,rgba(67,174,204,.16),transparent 27%),repeating-linear-gradient(90deg,#17242c 0 15%,#09131a 15% 16%,#21343f 16% 31%)!important}
+.theme-museum .v1-wall,.theme-temple .v1-wall,.immersive-scene[data-theme="avventura"] .immersive-room{background:radial-gradient(circle at 50% 14%,rgba(190,126,48,.14),transparent 25%),repeating-linear-gradient(90deg,#30271e 0 14%,#17110c 14% 15%,#3b3024 15% 29%)!important}
+.theme-bunker .v1-wall,.theme-prison .v1-wall{background:radial-gradient(circle at 50% 14%,rgba(128,146,83,.12),transparent 25%),repeating-linear-gradient(90deg,#242a26 0 18%,#101411 18% 19%,#303732 19% 37%)!important}
+.theme-sub .v1-wall,.theme-ship .v1-wall{background:radial-gradient(circle at 50% 14%,rgba(48,138,160,.14),transparent 25%),repeating-linear-gradient(90deg,#102a34 0 14%,#061319 14% 15%,#183b46 15% 29%)!important}
+.theme-ritual .v1-wall{background:radial-gradient(circle at 50% 54%,rgba(144,25,38,.25),transparent 26%),repeating-linear-gradient(90deg,#241117 0 14%,#0d0507 14% 15%,#33161c 15% 29%)!important}
+
+/* Scene sci-fi: mobili trasformati in pannelli */
+.theme-lab .v1-object.object-1:after,.theme-space .v1-object.object-1:after{border-color:#1a3039;background:repeating-linear-gradient(180deg,#10242d 0 14%,#254250 14% 17%);box-shadow:inset 0 0 35px #000,0 0 22px rgba(79,190,220,.12)}
+.theme-lab .v1-object.object-3:after,.theme-space .v1-object.object-3:after{border-color:#142630;background:linear-gradient(#274554 0 15%,#0c1d25 15%)}
+.theme-lab .v1-object.object-5:after,.theme-space .v1-object.object-5:after{border-color:#162b35;background:linear-gradient(90deg,#193746,#091820,#234654);box-shadow:inset 0 0 40px #000,0 0 25px rgba(74,186,219,.15)}
+
+/* Mobile: la scena resta ampia come nel prototipo */
+@media(max-width:520px){
+ .room-hotspot:nth-of-type(1),.v1-object.object-1{left:3%!important;width:31%!important}
+ .room-hotspot:nth-of-type(2),.v1-object.object-2{left:41%!important;width:18%!important}
+ .room-hotspot:nth-of-type(3),.v1-object.object-3{right:3%!important;width:32%!important}
+ .room-hotspot:nth-of-type(4),.v1-object.object-4{left:25%!important;width:22%!important}
+ .room-hotspot:nth-of-type(5),.v1-object.object-5{right:10%!important;width:26%!important}
+ .room-hotspot small,.v1-object-label{font-size:.5rem!important}
+}
