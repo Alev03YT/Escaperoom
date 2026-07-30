@@ -46,7 +46,7 @@
       <div class="m13-mirror-shape"><i></i></div>
       <div class="m13-bath-door"><div class="fog"></div><span>BAGNO</span></div>
       <div class="m13-exit-door"><div class="number">13</div><div class="reader"></div><div class="handle"></div></div>
-      ${hot('frame','Quadro storto',f.frame)}${hot('phone','Telefono',f.phone)}${hot('nightstand','Comodino',f.nightstand)}${hot('suitcase','Valigia',f.suitcase)}${hot('mirror','Specchio',f.mirror)}${hot('tv','Televisore',f.tv)}${hot('bath','Bagno',f.bath)}${hot('door','Porta 13',f.door)}
+      ${hot('door','Porta 13',f.door)}${hot('bath','Bagno',f.bath)}${hot('tv','Televisore',f.tv)}${hot('mirror','Specchio',f.mirror)}${hot('suitcase','Valigia',f.suitcase)}${hot('nightstand','Comodino',f.nightstand)}${hot('phone','Telefono',f.phone)}${hot('frame','Quadro storto',f.frame)}
       <div class="m13-rain"></div><div class="m13-vignette"></div><div class="m13-status">Tocca direttamente gli oggetti della camera</div>
     </div>`;
     document.querySelectorAll('[data-m13]').forEach(b=>b.onclick=()=>inspect(b.dataset.m13));
