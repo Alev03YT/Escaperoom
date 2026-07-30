@@ -1,104 +1,156 @@
-/* Il Museo Silenzioso V2 — stanza dedicata premium */
+/* Il Museo Silenzioso V3 — stanza dedicata e indipendente */
 (() => {
-  const $ = s => document.querySelector(s);
-  const museum = { selected:null, symbols:[], order:[] };
-  const oldPlay=$('#playBtn').onclick, oldHint=$('#hintBtn').onclick, oldNotes=$('#notesBtn').onclick, oldExit=$('#exitBtn').onclick;
+  const q = s => document.querySelector(s);
+  const museum = {selected:null, sequence:[], directions:[]};
+  const basePlay = q('#playBtn').onclick;
+  const baseHint = q('#hintBtn').onclick;
+  const baseNotes = q('#notesBtn').onclick;
+  const baseExit = q('#exitBtn').onclick;
 
-  const has=n=>state&&state.inventory.some(x=>x.name===n);
-  const chosen=n=>museum.selected===n&&has(n);
-  const add=(name,icon)=>{if(!has(name))state.inventory.push({name,icon});drawInventory();};
-  const remove=name=>{state.inventory=state.inventory.filter(x=>x.name!==name);if(museum.selected===name)museum.selected=null;drawInventory();};
-  const note=text=>{if(state&&!state.notes.includes(text))state.notes.push(text);};
+  const active = () => selected && selected.id === 'museo';
+  const has = name => !!state && state.inventory.some(i => i.name === name);
+  const selectedItem = name => museum.selected === name && has(name);
+  const remember = text => { if (state && !state.notes.includes(text)) state.notes.push(text); };
 
-  function drawInventory(){
-    const box=$('#inventoryItems');
-    box.innerHTML=state.inventory.length?state.inventory.map(i=>`<button class="inventory-item museum-inv ${museum.selected===i.name?'selected':''}" data-museum-item="${i.name}"><span>${i.icon}</span>${i.name}</button>`).join(''):'<span class="empty">Vuoto</span>';
-    box.querySelectorAll('[data-museum-item]').forEach(b=>b.onclick=()=>{museum.selected=museum.selected===b.dataset.museumItem?null:b.dataset.museumItem;drawInventory();status(museum.selected?`${museum.selected} selezionato`:'Oggetto deselezionato');});
+  function inventory(){
+    const box=q('#inventoryItems');
+    if(!box || !state) return;
+    box.innerHTML=state.inventory.length ? state.inventory.map(i =>
+      `<button class="inventory-item museum-item ${museum.selected===i.name?'selected':''}" data-museum-item="${i.name}"><span>${i.icon}</span>${i.name}</button>`
+    ).join('') : '<span class="empty">Vuoto</span>';
+    box.querySelectorAll('[data-museum-item]').forEach(btn => btn.onclick=()=>{
+      museum.selected = museum.selected===btn.dataset.museumItem ? null : btn.dataset.museumItem;
+      inventory();
+      status(museum.selected ? `${museum.selected} selezionato` : 'Oggetto deselezionato');
+    });
   }
-  function status(text){const el=$('.museum-status');if(!el)return;el.textContent=text;clearTimeout(status.t);status.t=setTimeout(()=>el.textContent='Esamina le opere e gli arredi del museo',2600);}
-  const hot=(id,label,done=false)=>`<button class="museum-hot museum-${id} ${done?'solved':''}" data-museum="${id}" aria-label="${label}"><span>${label}</span></button>`;
+  function add(name,icon){if(!has(name)){state.inventory.push({name,icon});inventory();}}
+  function remove(name){state.inventory=state.inventory.filter(i=>i.name!==name);if(museum.selected===name)museum.selected=null;inventory();}
+  function status(text){const el=q('.museum-status');if(!el)return;el.textContent=text;clearTimeout(status.t);status.t=setTimeout(()=>{if(el)el.textContent='Tocca gli elementi della sala per esaminarli';},2400);}
+  function zone(id,label,done){return `<button class="museum-zone museum-zone--${id} ${done?'done':''}" data-museum-zone="${id}" aria-label="${label}"><span>${label}</span></button>`;}
 
-  function drawScene(){
-    const f=state.flags;document.body.classList.add('museum-active');$('#sceneBackdrop').style.background='transparent';
-    $('#sceneObjects').innerHTML=`<div class="museum-scene ${f.lasers?'lasers-off':''} ${f.vault?'vault-open':''}">
-      <div class="museum-wall"></div><div class="museum-floor"></div><div class="museum-arch a1"></div><div class="museum-arch a2"></div>
-      <div class="museum-statue"><div class="head"></div><div class="body"></div><div class="base"><b>26</b></div></div>
-      <div class="museum-candelabrum"><i></i><b></b><em></em></div>
-      <div class="museum-map"><div>✦</div></div>
-      <div class="museum-case"><div class="glass"><span>RELIQUIA</span></div><div class="plinth"></div></div>
-      <div class="museum-painting"><div class="portrait"></div></div>
-      <div class="museum-console"><span>SECURITY</span><i></i><i></i><i></i><i></i></div>
-      <div class="museum-vault"><div class="wheel"></div><div class="slot"></div></div>
-      <div class="museum-exit"><div class="scanner"></div><div class="handle"></div></div>
-      <div class="museum-laser l1"></div><div class="museum-laser l2"></div><div class="museum-laser l3"></div>
-      ${hot('statue','Statua',f.statue)}${hot('candelabrum','Candelabro',f.candelabrum)}${hot('map','Mappa antica',f.map)}${hot('case','Vetrina',f.case)}${hot('painting','Quadro',f.painting)}${hot('console','Console sicurezza',f.console)}${hot('vault','Caveau',f.vault)}${hot('exit','Portone',f.exit)}
-      <div class="museum-dust"></div><div class="museum-vignette"></div><div class="museum-status">Esamina le opere e gli arredi del museo</div>
-    </div>`;
-    document.querySelectorAll('[data-museum]').forEach(b=>b.onclick=()=>inspect(b.dataset.museum));
+  function render(){
+    const f=state.flags;
+    document.body.classList.add('museum-active');
+    q('#sceneBackdrop').style.background='transparent';
+    q('#sceneObjects').innerHTML=`
+      <div class="museum-scene ${f.lasers?'lasers-off':''} ${f.vault?'vault-open':''}">
+        <div class="museum-ceiling"></div><div class="museum-wall"></div><div class="museum-floor"></div>
+        <div class="museum-column c1"></div><div class="museum-column c2"></div>
+        <div class="museum-door"><div class="museum-door-panel"></div><div class="museum-scanner"></div></div>
+        <div class="museum-statue"><div class="statue-head"></div><div class="statue-body"></div><div class="statue-base"><b>26</b></div></div>
+        <div class="museum-candelabrum"><i></i><b></b><em></em><span></span></div>
+        <div class="museum-map"><div>✦</div></div>
+        <div class="museum-case"><div class="case-glass"><span>${f.case?'VUOTA':'RELIQUIA'}</span></div><div class="case-plinth"></div></div>
+        <div class="museum-painting"><div class="portrait"></div></div>
+        <div class="museum-console"><strong>SECURITY</strong><div><i></i><i></i><i></i><i></i></div></div>
+        <div class="museum-vault"><div class="vault-wheel"></div><div class="vault-slot"></div></div>
+        <div class="museum-laser l1"></div><div class="museum-laser l2"></div><div class="museum-laser l3"></div>
+        ${zone('statue','Statua del Custode',f.statue)}
+        ${zone('candles','Candelabro',f.candles)}
+        ${zone('map','Mappa antica',f.map)}
+        ${zone('case','Vetrina',f.case)}
+        ${zone('painting','Ritratto del fondatore',f.painting)}
+        ${zone('console','Console di sicurezza',f.console)}
+        ${zone('vault','Caveau',f.vault)}
+        ${zone('door','Portone principale',f.exit)}
+        <div class="museum-dust"></div><div class="museum-vignette"></div>
+        <div class="museum-status">Tocca gli elementi della sala per esaminarli</div>
+      </div>`;
+    q('#sceneObjects').querySelectorAll('[data-museum-zone]').forEach(btn=>btn.onclick=()=>inspect(btn.dataset.museumZone));
   }
 
   function begin(){
-    clearInterval(timerId);state={time:selected.minutes*60,hints:3,hintsUsed:0,step:0,inventory:[],notes:[],escaped:false,flags:{}};museum.selected=null;museum.symbols=[];museum.order=[];
-    $('#gameCase').textContent='CASO 04';$('#gameTitle').textContent='Il Museo Silenzioso';$('#hintCount').textContent=state.hints;drawScene();drawInventory();updateTimer();show('game');
-    setTimeout(()=>modal('<h2>Il Museo Silenzioso</h2><p>Le luci di emergenza si accendono. Una voce metallica annuncia: <strong>INTRUSO RILEVATO</strong>.</p><p>La statua scomparsa sembra essere ancora qui, ma nessuna telecamera la vede.</p><button id="museumStart" class="action-btn">ENTRA NELLA GALLERIA</button>'),100);
-    setTimeout(()=>{const b=$('#museumStart');if(b)b.onclick=closeModal},180);
-    timerId=setInterval(()=>{if(state.time>0&&!state.escaped){state.time--;updateTimer()}else if(!state.escaped){clearInterval(timerId);modal('<h2>Tempo scaduto</h2><p>Le serrande calano e il museo torna completamente silenzioso.</p><button id="museumRetry" class="action-btn">RIPROVA</button>');setTimeout(()=>{const b=$('#museumRetry');if(b)b.onclick=()=>{closeModal();begin()}},0)}},1000);
+    clearInterval(timerId);
+    state={time:selected.minutes*60,hints:3,hintsUsed:0,step:0,inventory:[],notes:[],escaped:false,flags:{}};
+    museum.selected=null; museum.sequence=[]; museum.directions=[];
+    q('#gameCase').textContent='CASO 04'; q('#gameTitle').textContent='Il Museo Silenzioso'; q('#hintCount').textContent=state.hints;
+    render(); inventory(); updateTimer(); show('game');
+    setTimeout(()=>modal('<h2>Il Museo Silenzioso</h2><p>Le luci di emergenza si accendono. Una voce metallica annuncia: <strong>INTRUSO RILEVATO</strong>.</p><p>Recupera il reperto scomparso e riapri il portone prima che il museo venga sigillato.</p><button id="museumIntro" class="action-btn">ENTRA NELLA GALLERIA</button>'),80);
+    setTimeout(()=>{const b=q('#museumIntro');if(b)b.onclick=closeModal;},120);
+    timerId=setInterval(()=>{if(state.time>0&&!state.escaped){state.time--;updateTimer();}else if(!state.escaped){clearInterval(timerId);modal('<h2>Tempo scaduto</h2><p>Le serrande blindate si chiudono. Il museo torna completamente silenzioso.</p><button id="museumRetry" class="action-btn">RIPROVA</button>');setTimeout(()=>{const b=q('#museumRetry');if(b)b.onclick=()=>{closeModal();begin();};},0);}},1000);
   }
-  function inspect(id){({statue,candelabrum,map,case:displayCase,painting,console:security,vault,exit}[id]||(()=>{}))();}
 
+  function inspect(id){({statue, candles, map, case:displayCase, painting, console:security, vault, door:exitDoor}[id]||(()=>{}))();}
   function statue(){
-    if(state.flags.statue)return modal('<h2>Statua del Custode</h2><p>La targhetta è già stata rimossa.</p>');
-    state.flags.statue=true;state.step=1;add('Targhetta del restauro','🏷️');note('Sulla base della statua: “Restauro 19:42 — Reperto 26”.');drawScene();
-    modal('<h2>Statua del Custode</h2><p>La figura tiene una mano davanti agli occhi. Sotto la base trovi una targhetta allentata.</p><p class="tool-success">RESTAURO 19:42 — REPERTO 26</p>');
+    if(state.flags.statue)return modal('<h2>Statua del Custode</h2><p>La targhetta del restauro è già stata rimossa.</p>');
+    state.flags.statue=true;state.step=1;add('Targhetta del restauro','🏷️');remember('Targhetta: RESTAURO 19:42 — REPERTO 26.');render();
+    modal('<h2>Statua del Custode</h2><p>Sotto la base trovi una targhetta metallica allentata.</p><div class="clue">RESTAURO 19:42<br>REPERTO 26</div>');
   }
-  function candelabrum(){
-    if(state.flags.candelabrum)return modal('<h2>Candelabro</h2><p>La candela centrale resta abbassata.</p>');
-    if(!has('Targhetta del restauro'))return modal('<h2>Candelabro</h2><p>Quattro candele di altezza diversa. La base mostra piccoli numeri consumati.</p>');
-    modal('<h2>Candelabro cronologico</h2><p>Abbassa le candele nell’ordine indicato dall’orario del restauro.</p><div class="museum-sequence">${['1','9','4','2'].map(n=>`<button data-candle="${n}">${n}</button>`).join('')}</div><p id="museumCandleMsg"></p>');
-    setTimeout(()=>document.querySelectorAll('[data-candle]').forEach(b=>b.onclick=()=>{museum.order.push(b.dataset.candle);b.disabled=true;if(museum.order.length===4){if(museum.order.join('')==='1942'){state.flags.candelabrum=true;state.step=2;add('Lente del curatore','🔍');note('Il candelabro nasconde una lente d’ingrandimento.');drawScene();$('#museumCandleMsg').innerHTML='<span class="success">Scatta un vano segreto: trovi una lente.</span>'}else{museum.order=[];document.querySelectorAll('[data-candle]').forEach(x=>x.disabled=false);$('#museumCandleMsg').innerHTML='<span class="error">Il meccanismo torna in posizione.</span>'}}}),0);
+  function candles(){
+    if(state.flags.candles)return modal('<h2>Candelabro</h2><p>Il vano segreto è già aperto.</p>');
+    if(!has('Targhetta del restauro'))return modal('<h2>Candelabro</h2><p>Quattro pulsanti numerati sono nascosti alla base. Ti manca l’ordine corretto.</p>');
+    museum.sequence=[];
+    modal('<h2>Candelabro cronologico</h2><p>Premi i numeri nell’ordine indicato dall’orario del restauro.</p><div class="museum-puzzle-grid">'+['1','9','4','2'].map(n=>`<button data-candle="${n}">${n}</button>`).join('')+'</div><p id="museumPuzzleMsg"></p>');
+    setTimeout(()=>q('#modalContent').querySelectorAll('[data-candle]').forEach(btn=>btn.onclick=()=>{
+      museum.sequence.push(btn.dataset.candle);btn.classList.add('pressed');
+      if(museum.sequence.length===4){
+        if(museum.sequence.join('')==='1942'){state.flags.candles=true;state.step=2;add('Lente del curatore','🔍');remember('Il candelabro nascondeva una lente del curatore.');render();q('#museumPuzzleMsg').innerHTML='<span class="success">Vano aperto: hai trovato una lente.</span>';}
+        else{museum.sequence=[];q('#modalContent').querySelectorAll('[data-candle]').forEach(x=>x.classList.remove('pressed'));q('#museumPuzzleMsg').innerHTML='<span class="error">Ordine errato. Il meccanismo si azzera.</span>';}
+      }
+    }),0);
   }
   function map(){
-    if(state.flags.map)return modal('<h2>Mappa antica</h2><p>La frase nascosta è ormai leggibile: NORD, EST, OVEST, SUD.</p>');
-    if(!chosen('Lente del curatore'))return modal('<h2>Mappa antica</h2><p>La pergamena è piena di graffi troppo sottili per essere letti.</p>');
-    remove('Lente del curatore');state.flags.map=true;state.step=3;add('Sequenza delle sale','🗺️');note('Con la lente leggi: NORD → EST → OVEST → SUD.');drawScene();modal('<h2>Inchiostro invisibile</h2><p>La lente rivela una traccia nascosta tra le vie della città.</p><p class="tool-success">NORD → EST → OVEST → SUD</p>');
+    if(state.flags.map)return modal('<h2>Mappa antica</h2><p>La scritta nascosta dice: NORD → EST → OVEST → SUD.</p>');
+    if(!selectedItem('Lente del curatore'))return modal('<h2>Mappa antica</h2><p>La superficie presenta segni sottilissimi. Potrebbe servire uno strumento ottico.</p>');
+    remove('Lente del curatore');state.flags.map=true;state.step=3;add('Sequenza delle sale','🗺️');remember('La lente rivela: NORD → EST → OVEST → SUD.');render();
+    modal('<h2>Inchiostro invisibile</h2><p>Passando la lente sulla mappa compare una sequenza.</p><div class="clue">NORD → EST → OVEST → SUD</div>');
   }
   function displayCase(){
-    if(state.flags.case)return modal('<h2>Vetrina</h2><p>La reliquia non è più sul piedistallo.</p>');
-    if(!has('Sequenza delle sale'))return modal('<h2>Vetrina</h2><p>Il vetro è bloccato da quattro sensori direzionali.</p>');
-    modal('<h2>Sensori della vetrina</h2><p>Imposta la sequenza letta sulla mappa.</p><div class="museum-arrows">${[['N','↑'],['E','→'],['O','←'],['S','↓']].map(x=>`<button data-dir="${x[0]}">${x[1]}</button>`).join('')}</div><p id="museumCaseMsg"></p>');
-    setTimeout(()=>document.querySelectorAll('[data-dir]').forEach(b=>b.onclick=()=>{museum.symbols.push(b.dataset.dir);if(museum.symbols.length===4){if(museum.symbols.join('')==='NEOS'){state.flags.case=true;state.step=4;add('Sigillo d’ottone','🔘');note('Nella vetrina trovi un sigillo d’ottone con il numero 26.');drawScene();$('#museumCaseMsg').innerHTML='<span class="success">Il vetro si solleva senza rumore.</span>'}else{museum.symbols=[];$('#museumCaseMsg').innerHTML='<span class="error">Sequenza errata.</span>'}}}),0);
+    if(state.flags.case)return modal('<h2>Vetrina</h2><p>Il piedistallo è vuoto.</p>');
+    if(!has('Sequenza delle sale'))return modal('<h2>Vetrina</h2><p>Quattro sensori direzionali bloccano il vetro.</p>');
+    museum.directions=[];
+    modal('<h2>Sensori della vetrina</h2><p>Riproduci la sequenza scoperta sulla mappa.</p><div class="museum-puzzle-grid arrows"><button data-dir="N">↑</button><button data-dir="E">→</button><button data-dir="O">←</button><button data-dir="S">↓</button></div><p id="museumPuzzleMsg"></p>');
+    setTimeout(()=>q('#modalContent').querySelectorAll('[data-dir]').forEach(btn=>btn.onclick=()=>{
+      museum.directions.push(btn.dataset.dir);btn.classList.add('pressed');setTimeout(()=>btn.classList.remove('pressed'),180);
+      if(museum.directions.length===4){
+        if(museum.directions.join('')==='NEOS'){state.flags.case=true;state.step=4;add('Sigillo d’ottone','🔘');remember('La vetrina conteneva un sigillo d’ottone inciso con il numero 26.');render();q('#museumPuzzleMsg').innerHTML='<span class="success">Sensori disattivati. Il vetro si solleva.</span>';}
+        else{museum.directions=[];q('#museumPuzzleMsg').innerHTML='<span class="error">Sequenza errata.</span>';}
+      }
+    }),0);
   }
   function painting(){
-    if(state.flags.painting)return modal('<h2>Ritratto del fondatore</h2><p>Dietro il quadro resta visibile una serratura circolare.</p>');
-    if(!chosen('Sigillo d’ottone'))return modal('<h2>Ritratto del fondatore</h2><p>La cornice sporge dal muro. Dietro si intravede una cavità rotonda.</p>');
-    remove('Sigillo d’ottone');state.flags.painting=true;state.step=5;add('Chiave del caveau','🗝️');note('Il sigillo apre il pannello dietro il ritratto. All’interno c’è la chiave del caveau.');drawScene();modal('<h2>Dietro il ritratto</h2><p>Il sigillo ruota nella cavità e libera un piccolo vano blindato.</p><p class="tool-success">Raccogli la chiave del caveau.</p>');
+    if(state.flags.painting)return modal('<h2>Ritratto del fondatore</h2><p>Dietro il quadro resta aperto un piccolo vano.</p>');
+    if(!selectedItem('Sigillo d’ottone'))return modal('<h2>Ritratto del fondatore</h2><p>La cornice sporge dal muro. Dietro intravedi una cavità circolare.</p>');
+    remove('Sigillo d’ottone');state.flags.painting=true;state.step=5;add('Chiave del caveau','🗝️');remember('Il sigillo apre il vano dietro il ritratto: contiene la chiave del caveau.');render();
+    modal('<h2>Dietro il ritratto</h2><p>Il sigillo entra perfettamente nella cavità. La cornice scatta in avanti.</p><p class="success">Hai trovato la chiave del caveau.</p>');
   }
   function security(){
-    if(state.flags.console)return modal('<h2>Console sicurezza</h2><p>I laser sono disattivati.</p>');
-    if(!state.flags.painting)return modal('<h2>Console sicurezza</h2><p>Richiede il numero del reperto e l’orario del restauro.</p>');
-    modal('<h2>Console di sicurezza</h2><p>Inserisci prima il reperto, poi l’orario.</p><div class="code-input"><input id="museumSecurityCode" inputmode="numeric" maxlength="6" placeholder="000000"><button id="museumSecurityBtn">DISATTIVA</button></div><p id="museumSecurityMsg"></p>');
-    setTimeout(()=>$('#museumSecurityBtn').onclick=()=>{if($('#museumSecurityCode').value==='261942'){state.flags.console=true;state.flags.lasers=true;state.step=6;add('Pass del custode','🎟️');note('La console accetta 26-1942 e rilascia il pass del custode.');drawScene();$('#museumSecurityMsg').innerHTML='<span class="success">LASER DISATTIVATI — PASS RILASCIATO</span>'}else $('#museumSecurityMsg').innerHTML='<span class="error">Credenziali non valide.</span>'},0);
+    if(state.flags.console)return modal('<h2>Console di sicurezza</h2><p>I laser sono già disattivati.</p>');
+    if(!state.flags.painting)return modal('<h2>Console di sicurezza</h2><p>Lo schermo richiede il numero del reperto seguito dall’orario del restauro.</p>');
+    modal('<h2>Console di sicurezza</h2><p>Inserisci reperto e orario, senza spazi.</p><div class="code-input"><input id="museumSecurityCode" inputmode="numeric" maxlength="6" placeholder="000000"><button id="museumSecurityBtn">DISATTIVA</button></div><p id="museumPuzzleMsg"></p>');
+    setTimeout(()=>q('#museumSecurityBtn').onclick=()=>{
+      if(q('#museumSecurityCode').value==='261942'){state.flags.console=true;state.flags.lasers=true;state.step=6;add('Pass del custode','🎟️');remember('Codice console: 261942. La macchina ha rilasciato il pass del custode.');render();q('#museumPuzzleMsg').innerHTML='<span class="success">LASER DISATTIVATI — PASS RILASCIATO</span>';}
+      else q('#museumPuzzleMsg').innerHTML='<span class="error">Credenziali non valide.</span>';
+    },0);
   }
   function vault(){
     if(state.flags.vault)return modal('<h2>Caveau</h2><p>Il piedistallo interno è vuoto.</p>');
-    if(!state.flags.lasers)return modal('<h2>Caveau</h2><p>Tre fasci laser impediscono di raggiungere la serratura.</p>');
-    if(!chosen('Chiave del caveau'))return modal('<h2>Caveau</h2><p>La serratura meccanica richiede una chiave antica.</p>');
-    remove('Chiave del caveau');state.flags.vault=true;state.step=7;add('Idolo silenzioso','🗿');note('Nel caveau trovi l’idolo scomparso. Sul fondo è inciso: “Non voltarti”.');drawScene();modal('<h2>Il caveau si apre</h2><p>La porta ruota lentamente. Sul piedistallo c’è la statua dichiarata scomparsa.</p><p class="tool-success">Hai recuperato l’Idolo silenzioso.</p>');
+    if(!state.flags.lasers)return modal('<h2>Caveau</h2><p>I fasci laser impediscono di raggiungere la serratura.</p>');
+    if(!selectedItem('Chiave del caveau'))return modal('<h2>Caveau</h2><p>La serratura richiede una chiave antica.</p>');
+    remove('Chiave del caveau');state.flags.vault=true;state.step=7;add('Idolo silenzioso','🗿');remember('Nel caveau hai recuperato l’Idolo silenzioso. Sul retro è inciso: NON VOLTARTI.');render();
+    modal('<h2>Il caveau si apre</h2><p>La porta blindata ruota lentamente. Sul piedistallo si trova il reperto scomparso.</p><p class="success">Hai recuperato l’Idolo silenzioso.</p>');
   }
-  function exit(){
+  function exitDoor(){
     if(state.flags.exit)return;
-    if(!chosen('Pass del custode'))return modal('<h2>Portone principale</h2><p>Lo scanner richiede il pass del custode.</p>');
-    if(!has('Idolo silenzioso'))return modal('<h2>Portone principale</h2><p>Il sistema accetta il pass, ma il caso non è ancora risolto.</p>');
-    modal('<h2>Uscita del museo</h2><p>Lo scanner riconosce il pass. Conferma il numero del reperto scomparso.</p><div class="code-input"><input id="museumExitCode" inputmode="numeric" maxlength="2" placeholder="00"><button id="museumExitBtn">APRI</button></div><p id="museumExitMsg"></p>');
-    setTimeout(()=>$('#museumExitBtn').onclick=()=>{if($('#museumExitCode').value==='26'){museum.selected=null;state.flags.exit=true;drawScene();document.body.classList.remove('museum-active');finish()}else $('#museumExitMsg').innerHTML='<span class="error">Reperto non riconosciuto.</span>'},0);
+    if(!selectedItem('Pass del custode'))return modal('<h2>Portone principale</h2><p>Lo scanner richiede il pass del custode selezionato nell’inventario.</p>');
+    if(!has('Idolo silenzioso'))return modal('<h2>Portone principale</h2><p>Il pass è valido, ma il sistema segnala che il reperto è ancora disperso.</p>');
+    modal('<h2>Uscita del museo</h2><p>Conferma il numero del reperto recuperato.</p><div class="code-input"><input id="museumExitCode" inputmode="numeric" maxlength="2" placeholder="00"><button id="museumExitBtn">APRI</button></div><p id="museumPuzzleMsg"></p>');
+    setTimeout(()=>q('#museumExitBtn').onclick=()=>{
+      if(q('#museumExitCode').value==='26'){state.flags.exit=true;state.escaped=true;document.body.classList.remove('museum-active');finish();}
+      else q('#museumPuzzleMsg').innerHTML='<span class="error">Numero di reperto errato.</span>';
+    },0);
   }
-  function hint(){
-    if(state.hints<=0)return modal('<h2>Nessun indizio rimasto</h2><p>Controlla appunti e inventario.</p>');
-    const hints=['Controlla la base della statua.','L’orario 19:42 indica l’ordine delle candele.','Seleziona la lente e usala sulla mappa.','Segui i punti cardinali sulla vetrina.','Seleziona il sigillo e prova il quadro.','La console vuole reperto seguito da orario: 26 e 1942.','Seleziona la chiave e apri il caveau.','Seleziona il pass, poi usa il numero 26 sul portone.'];
-    state.hints--;state.hintsUsed++;$('#hintCount').textContent=state.hints;modal(`<h2>Indizio</h2><p>${hints[Math.min(state.step,hints.length-1)]}</p>`);
+  function museumHint(){
+    if(state.hints<=0)return modal('<h2>Nessun indizio rimasto</h2><p>Rileggi gli appunti e controlla l’inventario.</p>');
+    const hints=['Esamina la base della statua.','L’orario 19:42 indica l’ordine dei quattro pulsanti.','Seleziona la lente e usala sulla mappa.','Riproduci NORD, EST, OVEST, SUD sulla vetrina.','Seleziona il sigillo e usalo sul ritratto.','La console vuole 26 seguito da 1942.','Disattiva i laser, seleziona la chiave e apri il caveau.','Seleziona il pass e inserisci 26 sul portone.'];
+    state.hints--;state.hintsUsed++;q('#hintCount').textContent=state.hints;modal(`<h2>Indizio</h2><p>${hints[Math.min(state.step,hints.length-1)]}</p>`);
   }
-  $('#playBtn').onclick=()=>selected.id==='museo'?begin():oldPlay();
-  $('#hintBtn').onclick=()=>selected&&selected.id==='museo'?hint():oldHint();
-  $('#notesBtn').onclick=()=>selected&&selected.id==='museo'?modal(`<h2>Appunti</h2>${state.notes.length?'<ul>'+state.notes.map(n=>`<li>${n}</li>`).join('')+'</ul>':'<p>Non hai ancora scoperto nulla.</p>'}`):oldNotes();
-  $('#exitBtn').onclick=()=>{document.body.classList.remove('museum-active');oldExit();};
+  function cleanup(){document.body.classList.remove('museum-active');museum.selected=null;}
+
+  q('#playBtn').onclick=()=>active()?begin():basePlay();
+  q('#hintBtn').onclick=()=>active()?museumHint():baseHint();
+  q('#notesBtn').onclick=()=>active()?modal(`<h2>Appunti</h2>${state.notes.length?'<ul>'+state.notes.map(n=>`<li>${n}</li>`).join('')+'</ul>':'<p>Non hai ancora scoperto nulla.</p>'}`):baseNotes();
+  q('#exitBtn').onclick=()=>{if(active())cleanup();baseExit();};
+  document.addEventListener('click',e=>{if(e.target.id==='confirmExit'&&active())cleanup();});
 })();
