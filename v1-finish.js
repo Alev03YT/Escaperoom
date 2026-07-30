@@ -2,7 +2,7 @@
 (() => {
   let scheduled=false;
   const observer=new MutationObserver(()=>{
-    if(scheduled||!window.state||state.escaped||!window.selected||selected.id==='archivio47')return;
+    if(scheduled||typeof state==='undefined'||!state||state.escaped||typeof selected==='undefined'||!selected||selected.id==='archivio47')return;
     const objects=[...document.querySelectorAll('.v1-object')];
     if(objects.length===5&&objects.every(x=>x.classList.contains('solved'))){
       scheduled=true;
