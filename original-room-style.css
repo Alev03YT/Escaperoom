@@ -1,18 +1,15 @@
-/* EscapeVerse — ritorno allo stile del prototipo originale
-   Gli oggetti fanno parte della stanza; i pulsanti sono hotspot invisibili. */
+/* EscapeVerse — stile definitivo: Archivio 47 come riferimento visivo
+   Oggetti integrati nella scena, hotspot invisibili e ambientazioni realmente diverse. */
 
 /* Base condivisa */
 .immersive-scene,.v1-scene{background:#090b10!important;perspective:1000px}
-.immersive-room,.v1-wall{left:0!important;right:0!important;top:0!important;bottom:0!important;border:0!important;border-radius:0!important;box-shadow:inset 0 0 130px #000!important;background:
-radial-gradient(circle at 50% 14%,rgba(235,210,156,.12),transparent 23%),
-linear-gradient(90deg,rgba(0,0,0,.72),transparent 19%,transparent 81%,rgba(0,0,0,.72)),
-repeating-linear-gradient(90deg,#191f27 0 12%,#11161d 12% 13%,#202732 13% 25%)!important}
+.immersive-room,.v1-wall{left:0!important;right:0!important;top:0!important;bottom:0!important;border:0!important;border-radius:0!important;box-shadow:inset 0 0 140px #000!important;background:radial-gradient(circle at 50% 14%,rgba(235,210,156,.12),transparent 23%),linear-gradient(90deg,rgba(0,0,0,.72),transparent 19%,transparent 81%,rgba(0,0,0,.72)),repeating-linear-gradient(90deg,#191f27 0 12%,#11161d 12% 13%,#202732 13% 25%)!important}
 .immersive-floor,.v1-floor{left:-20%!important;right:-20%!important;bottom:-17%!important;height:40%!important;background:repeating-linear-gradient(90deg,#12100f 0 12%,#211a16 12% 24%)!important;transform:rotateX(63deg)!important;box-shadow:inset 0 42px 75px #000!important}
 .immersive-scene:before,.v1-scene:before{content:"";position:absolute;left:50%;top:0;width:3px;height:17%;background:#282828;transform:translateX(-50%);z-index:2}
 .immersive-scene:after,.v1-scene:after{content:"";position:absolute;left:50%;top:14%;width:105px;height:25px;border-radius:50%;background:#2a261f;transform:translateX(-50%);box-shadow:0 18px 58px 28px rgba(226,197,132,.12);z-index:2;pointer-events:none}
 
-/* Hotspot originali: nessuna tessera, nessuna etichetta fissa */
-.room-hotspot,.v1-object{border:0!important;background:transparent!important;border-radius:0!important;box-shadow:none!important;backdrop-filter:none!important;display:block!important;overflow:visible!important;filter:drop-shadow(0 14px 18px rgba(0,0,0,.72));transition:filter .2s,transform .2s,opacity .2s}
+/* Hotspot invisibili */
+.room-hotspot,.v1-object{border:0!important;background:transparent!important;border-radius:0!important;box-shadow:none!important;backdrop-filter:none!important;display:block!important;overflow:visible!important;filter:drop-shadow(0 14px 18px rgba(0,0,0,.72));transition:filter .2s,opacity .2s}
 .room-hotspot:before,.v1-object:before{content:"";position:absolute;inset:-7px;border:1px solid transparent;border-radius:10px;transition:.2s}
 .room-hotspot:hover:before,.room-hotspot:focus-visible:before,.v1-object:hover:before,.v1-object:focus-visible:before{border-color:rgba(225,198,139,.35);box-shadow:0 0 24px rgba(225,198,139,.12)}
 .room-hotspot:hover,.v1-object:hover{transform:none!important}
@@ -20,36 +17,119 @@ repeating-linear-gradient(90deg,#191f27 0 12%,#11161d 12% 13%,#202732 13% 25%)!i
 .room-hotspot small,.v1-object-label{position:absolute!important;left:50%;top:auto!important;bottom:-25px;transform:translateX(-50%);width:max-content;max-width:150px;padding:5px 9px;border-radius:99px;background:rgba(0,0,0,.76);color:#d9d9d9;font-size:.55rem!important;font-weight:750;letter-spacing:.04em;text-transform:uppercase;opacity:0;pointer-events:none;transition:.2s}
 .room-hotspot:focus-visible small,.room-hotspot:active small,.v1-object:focus-visible .v1-object-label,.v1-object:active .v1-object-label{opacity:1}
 
-/* Oggetti fisici generici integrati nella scena */
+/* Posizioni condivise */
 .room-hotspot:nth-of-type(1),.v1-object.object-1{left:5%!important;top:20%!important;width:29%!important;height:49%!important}
-.room-hotspot:nth-of-type(1):after,.v1-object.object-1:after{content:"";position:absolute;inset:0;border:8px solid #15100d;background:
-linear-gradient(#17110e 0 3%,transparent 3% 31%,#17110e 31% 34%,transparent 34% 64%,#17110e 64% 67%,transparent 67%),
-repeating-linear-gradient(90deg,#52312b 0 8%,#252e38 8% 15%,#6a3036 15% 23%,#33251f 23% 31%);box-shadow:inset 0 0 35px #000,10px 18px 30px #000}
 .room-hotspot:nth-of-type(2),.v1-object.object-2{left:42%!important;top:17%!important;width:16%!important;height:18%!important}
-.room-hotspot:nth-of-type(2):after,.v1-object.object-2:after{content:"";position:absolute;left:5%;top:0;width:90%;aspect-ratio:1;border:7px solid #6e5430;border-radius:50%;background:radial-gradient(circle,#d8cfb7 0 58%,#957a4c 59% 67%,#211b14 68%);box-shadow:0 12px 26px #000,inset 0 0 12px #4b3d26}
-.room-hotspot:nth-of-type(2):before,.v1-object.object-2:before{z-index:3;background:linear-gradient(90deg,transparent 49%,#211b16 49% 52%,transparent 52%);clip-path:polygon(48% 17%,52% 17%,52% 51%,74% 42%,76% 47%,50% 55%)}
 .room-hotspot:nth-of-type(3),.v1-object.object-3{right:5%!important;left:auto!important;top:41%!important;width:31%!important;height:29%!important}
-.room-hotspot:nth-of-type(3):after,.v1-object.object-3:after{content:"";position:absolute;inset:0;border:6px solid #17110e;background:linear-gradient(#4a3428 0 15%,#2c211b 15%);box-shadow:inset 0 0 26px #000,10px 16px 28px #000}
-.room-hotspot:nth-of-type(3):before,.v1-object.object-3:before{z-index:2;inset:22% 8% 16% 54%;border:2px solid #17110e;border-radius:0;background:linear-gradient(#39291f 0 48%,#17110e 48% 52%,#39291f 52%);box-shadow:none}
 .room-hotspot:nth-of-type(4),.v1-object.object-4{left:27%!important;bottom:13%!important;top:auto!important;width:20%!important;height:13%!important}
-.room-hotspot:nth-of-type(4):after,.v1-object.object-4:after{content:"";position:absolute;inset:0;border:6px solid #353b42;background:repeating-linear-gradient(90deg,#080a0c 0 8%,#8b9298 8% 11%,#080a0c 11% 19%);box-shadow:0 9px 20px #000,inset 0 0 12px #000}
 .room-hotspot:nth-of-type(5),.v1-object.object-5{right:13%!important;left:auto!important;bottom:7%!important;top:auto!important;width:23%!important;height:45%!important}
-.room-hotspot:nth-of-type(5):after,.v1-object.object-5:after{content:"";position:absolute;inset:0;border:8px solid #11151a;background:linear-gradient(90deg,#30363c,#181d22 48%,#343a40);box-shadow:inset 0 0 45px #000,12px 18px 32px #000}
 
-/* Temi: cambiano materiali e atmosfera senza tornare alle card */
-.theme-motel .v1-wall,.theme-hotel .v1-wall,.immersive-scene[data-theme="horror"] .immersive-room{background:radial-gradient(circle at 50% 14%,rgba(164,68,53,.14),transparent 25%),repeating-linear-gradient(90deg,#261819 0 11%,#150d10 11% 12%,#301e20 12% 24%)!important}
-.theme-lab .v1-wall,.theme-space .v1-wall,.immersive-scene[data-theme="fantascienza"] .immersive-room{background:radial-gradient(circle at 50% 13%,rgba(67,174,204,.16),transparent 27%),repeating-linear-gradient(90deg,#17242c 0 15%,#09131a 15% 16%,#21343f 16% 31%)!important}
-.theme-museum .v1-wall,.theme-temple .v1-wall,.immersive-scene[data-theme="avventura"] .immersive-room{background:radial-gradient(circle at 50% 14%,rgba(190,126,48,.14),transparent 25%),repeating-linear-gradient(90deg,#30271e 0 14%,#17110c 14% 15%,#3b3024 15% 29%)!important}
-.theme-bunker .v1-wall,.theme-prison .v1-wall{background:radial-gradient(circle at 50% 14%,rgba(128,146,83,.12),transparent 25%),repeating-linear-gradient(90deg,#242a26 0 18%,#101411 18% 19%,#303732 19% 37%)!important}
-.theme-sub .v1-wall,.theme-ship .v1-wall{background:radial-gradient(circle at 50% 14%,rgba(48,138,160,.14),transparent 25%),repeating-linear-gradient(90deg,#102a34 0 14%,#061319 14% 15%,#183b46 15% 29%)!important}
-.theme-ritual .v1-wall{background:radial-gradient(circle at 50% 54%,rgba(144,25,38,.25),transparent 26%),repeating-linear-gradient(90deg,#241117 0 14%,#0d0507 14% 15%,#33161c 15% 29%)!important}
+/* ARCHIVIO 47 — riferimento */
+.room-hotspot:nth-of-type(1):after,.theme-archive .v1-object.object-1:after{content:"";position:absolute;inset:0;border:8px solid #15100d;background:linear-gradient(#17110e 0 3%,transparent 3% 31%,#17110e 31% 34%,transparent 34% 64%,#17110e 64% 67%,transparent 67%),repeating-linear-gradient(90deg,#52312b 0 8%,#252e38 8% 15%,#6a3036 15% 23%,#33251f 23% 31%);box-shadow:inset 0 0 35px #000,10px 18px 30px #000}
+.room-hotspot:nth-of-type(2):after,.theme-archive .v1-object.object-2:after{content:"";position:absolute;left:5%;top:0;width:90%;aspect-ratio:1;border:7px solid #6e5430;border-radius:50%;background:radial-gradient(circle,#d8cfb7 0 58%,#957a4c 59% 67%,#211b14 68%);box-shadow:0 12px 26px #000,inset 0 0 12px #4b3d26}
+.room-hotspot:nth-of-type(3):after,.theme-archive .v1-object.object-3:after{content:"";position:absolute;inset:0;border:6px solid #17110e;background:linear-gradient(#4a3428 0 15%,#2c211b 15%);box-shadow:inset 0 0 26px #000,10px 16px 28px #000}
+.room-hotspot:nth-of-type(4):after,.theme-archive .v1-object.object-4:after{content:"";position:absolute;inset:0;border:6px solid #353b42;background:repeating-linear-gradient(90deg,#080a0c 0 8%,#8b9298 8% 11%,#080a0c 11% 19%);box-shadow:0 9px 20px #000,inset 0 0 12px #000}
+.room-hotspot:nth-of-type(5):after,.theme-archive .v1-object.object-5:after{content:"";position:absolute;inset:0;border:8px solid #11151a;background:linear-gradient(90deg,#30363c,#181d22 48%,#343a40);box-shadow:inset 0 0 45px #000,12px 18px 32px #000}
 
-/* Scene sci-fi: mobili trasformati in pannelli */
-.theme-lab .v1-object.object-1:after,.theme-space .v1-object.object-1:after{border-color:#1a3039;background:repeating-linear-gradient(180deg,#10242d 0 14%,#254250 14% 17%);box-shadow:inset 0 0 35px #000,0 0 22px rgba(79,190,220,.12)}
-.theme-lab .v1-object.object-3:after,.theme-space .v1-object.object-3:after{border-color:#142630;background:linear-gradient(#274554 0 15%,#0c1d25 15%)}
-.theme-lab .v1-object.object-5:after,.theme-space .v1-object.object-5:after{border-color:#162b35;background:linear-gradient(90deg,#193746,#091820,#234654);box-shadow:inset 0 0 40px #000,0 0 25px rgba(74,186,219,.15)}
+/* MOTEL 13 */
+.theme-motel .v1-wall{background:radial-gradient(circle at 48% 18%,rgba(160,52,43,.13),transparent 22%),repeating-linear-gradient(90deg,#2c1719 0 9%,#170a0c 9% 10%,#341d20 10% 19%)!important}
+.theme-motel .v1-floor{background:repeating-linear-gradient(90deg,#23130f 0 10%,#3b2118 10% 20%)!important}
+.theme-motel .object-1:after{content:"";position:absolute;inset:12% 10%;border:9px solid #2c190f;background:linear-gradient(145deg,#48352b,#17100d);box-shadow:inset 0 0 0 5px #7d6041,0 15px 25px #000;transform:rotate(-7deg)}
+.theme-motel .object-2:after{content:"";position:absolute;left:15%;right:15%;top:12%;bottom:8%;border-radius:45% 45% 22% 22%;background:linear-gradient(#4a1718,#170809);box-shadow:inset 0 0 0 5px #251010,0 13px 25px #000}
+.theme-motel .object-3:after{content:"";position:absolute;inset:8%;border:6px solid #2b1714;border-radius:16px;background:linear-gradient(#764d32 0 18%,#3d2418 18%);box-shadow:inset 0 0 22px #000,0 16px 28px #000}
+.theme-motel .object-4:after{content:"";position:absolute;inset:-40% -20%;border:7px solid #4d342a;background:linear-gradient(110deg,#121417,#9eb2bb 48%,#1a1d20 52%);box-shadow:0 10px 25px #000}
+.theme-motel .object-5:after{content:"13";position:absolute;inset:0;display:grid;place-items:start center;padding-top:18%;border:8px solid #190b0c;background:linear-gradient(90deg,#3f1b1d,#16090a 50%,#472023);color:#a87b62;font-size:1.3rem;font-weight:900;box-shadow:inset 0 0 38px #000,12px 18px 32px #000}
 
-/* Mobile: la scena resta ampia come nel prototipo */
+/* PROTOCOLLO X */
+.theme-lab .v1-wall{background:radial-gradient(circle at 50% 12%,rgba(69,194,214,.18),transparent 24%),repeating-linear-gradient(90deg,#152730 0 15%,#07141a 15% 16%,#1d3540 16% 31%)!important}
+.theme-lab .v1-floor{background:repeating-linear-gradient(90deg,#0c171c 0 12%,#16272e 12% 24%)!important}
+.theme-lab .object-1:after{content:"";position:absolute;inset:3%;border:6px solid #15313b;background:repeating-linear-gradient(180deg,#0b2028 0 12%,#2c515f 12% 15%);box-shadow:inset 0 0 30px #000,0 0 26px rgba(74,192,215,.16)}
+.theme-lab .object-2:after{content:"37°C";position:absolute;inset:8%;display:grid;place-items:center;border:6px solid #14313b;border-radius:50%;background:radial-gradient(circle,#12323b,#061318);color:#79e1ec;font-weight:900;box-shadow:0 0 24px rgba(62,220,235,.18)}
+.theme-lab .object-3:after{content:"";position:absolute;inset:3%;border:6px solid #183641;background:linear-gradient(#315763 0 14%,#0a1b21 14% 72%,#173039 72%);box-shadow:inset 0 0 28px #000,0 14px 28px #000}
+.theme-lab .object-4:after{content:"";position:absolute;inset:-35% -40%;border:5px solid #1a404b;background:repeating-linear-gradient(90deg,#0c1b20 0 18%,#4cb6c8 18% 21%);box-shadow:0 0 20px rgba(67,193,214,.16)}
+.theme-lab .object-5:after{content:"";position:absolute;inset:0;border:8px solid #112b34;background:linear-gradient(90deg,#173946,#07181e 50%,#1e4855);box-shadow:inset 0 0 38px #000,0 0 28px rgba(73,185,209,.15)}
+
+/* MUSEO SILENZIOSO */
+.theme-museum .v1-wall{background:radial-gradient(circle at 50% 13%,rgba(195,150,72,.14),transparent 24%),repeating-linear-gradient(90deg,#31291f 0 14%,#18120d 14% 15%,#3d3327 15% 29%)!important}
+.theme-museum .object-1:after{content:"";position:absolute;left:18%;right:18%;top:4%;bottom:3%;background:linear-gradient(90deg,#76654b,#b6a37e 48%,#69593f);clip-path:polygon(37% 0,63% 0,68% 18%,80% 40%,71% 58%,76% 100%,24% 100%,29% 58%,20% 40%,32% 18%);box-shadow:0 15px 25px #000}
+.theme-museum .object-2:after{content:"";position:absolute;left:30%;right:30%;top:0;bottom:0;border-radius:50%;background:radial-gradient(circle,#f2d78d 0 16%,#7d5e24 17% 28%,transparent 29%);box-shadow:0 0 45px rgba(232,192,91,.22)}
+.theme-museum .object-3:after{content:"";position:absolute;inset:5%;border:7px solid #4b3721;background:linear-gradient(130deg,#b8a46f,#554d36);box-shadow:inset 0 0 16px #2c2417,0 15px 28px #000}
+.theme-museum .object-4:after{content:"";position:absolute;inset:-55% -45%;border:7px solid #6b5a3d;background:linear-gradient(160deg,rgba(173,213,220,.3),rgba(36,47,50,.65));box-shadow:inset 0 0 20px #000,0 12px 25px #000}
+.theme-museum .object-5:after{content:"";position:absolute;inset:0;border:10px solid #382a19;background:linear-gradient(90deg,#5b4931,#221b12 50%,#665237);box-shadow:inset 0 0 38px #000,12px 18px 32px #000}
+
+/* BUNKER OMEGA */
+.theme-bunker .v1-wall{background:radial-gradient(circle at 50% 13%,rgba(139,155,81,.13),transparent 25%),repeating-linear-gradient(90deg,#242a26 0 18%,#101411 18% 19%,#303732 19% 37%)!important}
+.theme-bunker .v1-floor{background:repeating-linear-gradient(90deg,#161a16 0 12%,#252c25 12% 24%)!important}
+.theme-bunker .object-1:after{content:"";position:absolute;inset:6%;border:7px solid #1a1f1b;background:linear-gradient(#3d493b 0 22%,#121712 22%);box-shadow:inset 0 0 22px #000,0 14px 25px #000}
+.theme-bunker .object-2:after{content:"98.5";position:absolute;inset:8%;display:grid;place-items:center;border:7px solid #20271f;background:#090d09;color:#a9c46f;font-family:monospace;font-weight:900;box-shadow:0 0 20px rgba(149,184,86,.15)}
+.theme-bunker .object-3:after{content:"";position:absolute;inset:2%;border:7px solid #1c221c;background:repeating-linear-gradient(180deg,#303930 0 18%,#111611 18% 20%);box-shadow:inset 0 0 25px #000,0 13px 25px #000}
+.theme-bunker .object-4:after{content:"";position:absolute;inset:-50% -45%;border:7px solid #20271f;background:linear-gradient(#353e34,#151a15);box-shadow:inset 0 0 18px #000,0 12px 25px #000}
+.theme-bunker .object-5:after{content:"Ω";position:absolute;inset:0;display:grid;place-items:center;border:11px solid #171d18;background:radial-gradient(circle,#2f382f,#111511);color:#72835c;font-size:2rem;font-weight:900;box-shadow:inset 0 0 42px #000,12px 18px 32px #000}
+
+/* PROFONDITÀ ZERO */
+.theme-sub .v1-wall{background:radial-gradient(circle at 50% 14%,rgba(55,149,179,.15),transparent 26%),repeating-linear-gradient(90deg,#0e2934 0 14%,#051319 14% 15%,#193d49 15% 29%)!important}
+.theme-sub .v1-floor{background:repeating-linear-gradient(90deg,#08161c 0 12%,#102832 12% 24%)!important}
+.theme-sub .object-1:after{content:"";position:absolute;inset:8%;border:7px solid #173844;border-radius:50%;background:radial-gradient(circle,#2a6b79 0 3%,#071a21 4% 58%,#153c48 59%);box-shadow:0 0 28px rgba(53,171,194,.18)}
+.theme-sub .object-2:after{content:"";position:absolute;inset:8%;border:8px solid #284954;border-radius:50%;background:conic-gradient(#5d8791 0 8%,#0e242b 8% 25%,#688f98 25% 33%,#0e242b 33% 50%,#638994 50% 58%,#0e242b 58%);box-shadow:0 12px 25px #000}
+.theme-sub .object-3:after{content:"240°";position:absolute;inset:5%;display:grid;place-items:center;border:7px solid #173944;border-radius:50%;background:radial-gradient(circle,#173944,#07161c);color:#79c7d6;font-weight:900}
+.theme-sub .object-4:after{content:"8 BAR";position:absolute;inset:-50% -45%;display:grid;place-items:center;border:7px solid #193d48;background:#07161b;color:#6cc3d4;font-weight:900;box-shadow:0 0 22px rgba(62,172,194,.14)}
+.theme-sub .object-5:after{content:"";position:absolute;inset:0;border:10px solid #102c36;border-radius:48% 48% 0 0;background:linear-gradient(90deg,#193f4b,#06161c 50%,#1d4653);box-shadow:inset 0 0 42px #000,12px 18px 32px #000}
+
+/* TEMPIO DEL SOLE NERO */
+.theme-temple .v1-wall{background:radial-gradient(circle at 50% 14%,rgba(197,121,45,.16),transparent 25%),repeating-linear-gradient(90deg,#35291b 0 14%,#171006 14% 15%,#46351f 15% 29%)!important}
+.theme-temple .v1-floor{background:repeating-linear-gradient(90deg,#1a1208 0 12%,#2f2211 12% 24%)!important}
+.theme-temple .object-1:after{content:"";position:absolute;inset:7%;background:linear-gradient(135deg,#a7874e,#4b3218);clip-path:polygon(10% 0,100% 8%,90% 100%,0 90%);box-shadow:0 14px 25px #000}
+.theme-temple .object-2:after{content:"";position:absolute;inset:2%;border:9px solid #6e4b20;border-radius:50%;background:radial-gradient(circle,#090704 0 18%,#b4772d 19% 25%,#3a2712 26% 48%,#bf853b 49% 56%,#1a1007 57%);box-shadow:0 0 28px rgba(192,119,42,.18)}
+.theme-temple .object-3:after{content:"";position:absolute;inset:0;border:7px solid #3b2813;background:linear-gradient(#7c5a2c 0 15%,#3a2714 15%);clip-path:polygon(12% 0,88% 0,100% 100%,0 100%);box-shadow:inset 0 0 25px #000,0 14px 28px #000}
+.theme-temple .object-4:after{content:"";position:absolute;inset:-45% -25%;background:linear-gradient(90deg,#6d4b21,#b0803e,#5b3c19);clip-path:polygon(35% 0,65% 0,75% 28%,62% 45%,75% 100%,25% 100%,38% 45%,25% 28%);box-shadow:0 14px 25px #000}
+.theme-temple .object-5:after{content:"";position:absolute;inset:0;border:10px solid #40280f;background:radial-gradient(circle at 50% 45%,#090603 0 20%,#6f4319 21% 24%,#201307 25%);box-shadow:inset 0 0 40px #000,12px 18px 32px #000}
+
+/* NAVE EOS */
+.theme-space .v1-wall{background:radial-gradient(circle at 50% 11%,rgba(93,119,215,.18),transparent 26%),repeating-linear-gradient(90deg,#151d37 0 15%,#070b19 15% 16%,#222d50 16% 31%)!important}
+.theme-space .v1-floor{background:repeating-linear-gradient(90deg,#090d1c 0 12%,#151d36 12% 24%)!important}
+.theme-space .object-1:after{content:"EOS";position:absolute;inset:5%;display:grid;place-items:center;border:6px solid #24365e;background:linear-gradient(#15284a,#071020);color:#6f8ff1;font-size:1.4rem;font-weight:900;box-shadow:0 0 26px rgba(93,125,224,.18)}
+.theme-space .object-2:after{content:"";position:absolute;inset:2%;border:6px solid #21355f;border-radius:50%;background:radial-gradient(circle at 25% 35%,#fff 0 1%,transparent 2%),radial-gradient(circle at 68% 24%,#fff 0 1%,transparent 2%),radial-gradient(circle at 58% 72%,#fff 0 1%,transparent 2%),radial-gradient(circle,#17264b,#050a16);box-shadow:0 0 24px rgba(99,130,231,.16)}
+.theme-space .object-3:after{content:"";position:absolute;inset:2%;border:7px solid #26385f;border-radius:50% 50% 22% 22%;background:radial-gradient(circle,#536ac1 0 11%,#121d3a 12% 52%,#080d1b 53%);box-shadow:0 0 30px rgba(86,111,202,.2)}
+.theme-space .object-4:after{content:"";position:absolute;inset:-45% -40%;border:6px solid #24365e;background:linear-gradient(135deg,#152446,#080e20);clip-path:polygon(0 45%,38% 45%,38% 0,100% 50%,38% 100%,38% 55%,0 55%);box-shadow:0 0 22px rgba(90,119,214,.15)}
+.theme-space .object-5:after{content:"";position:absolute;inset:0;border:9px solid #18284b;border-radius:48% 48% 4% 4%;background:linear-gradient(90deg,#243c70,#070d1d 50%,#2c477e);box-shadow:inset 0 0 42px #000,0 0 30px rgba(88,113,205,.18)}
+
+/* BLOCCO K */
+.theme-prison .v1-wall{background:radial-gradient(circle at 50% 13%,rgba(124,136,143,.12),transparent 24%),repeating-linear-gradient(90deg,#25292d 0 18%,#0e1114 18% 19%,#32373c 19% 37%)!important}
+.theme-prison .v1-floor{background:repeating-linear-gradient(90deg,#101214 0 12%,#1b1f22 12% 24%)!important}
+.theme-prison .object-1:after{content:"";position:absolute;inset:5%;border:6px solid #202428;background:repeating-linear-gradient(180deg,#b1aaa0 0 7%,#6d6861 7% 8%);box-shadow:0 14px 25px #000}
+.theme-prison .object-2:after{content:"";position:absolute;inset:5%;border:7px solid #1c2024;background:radial-gradient(circle at 50% 35%,#83909a 0 8%,#1d2429 9% 26%,#090c0e 27%);clip-path:polygon(20% 0,80% 0,100% 100%,0 100%);box-shadow:0 13px 25px #000}
+.theme-prison .object-3:after{content:"";position:absolute;inset:0;border:7px solid #1a1d20;background:repeating-linear-gradient(90deg,#0a0c0e 0 8%,#777f85 8% 12%,#0a0c0e 12% 20%);box-shadow:inset 0 0 20px #000,0 14px 27px #000}
+.theme-prison .object-4:after{content:"";position:absolute;inset:-60% -50%;background:repeating-linear-gradient(45deg,#3b3d3f 0 8%,#242628 8% 16%);clip-path:polygon(0 5%,100% 0,94% 100%,8% 93%);box-shadow:0 12px 24px #000}
+.theme-prison .object-5:after{content:"K";position:absolute;inset:0;display:grid;place-items:center;border:10px solid #171a1d;background:repeating-linear-gradient(90deg,#0b0d0f 0 9%,#6a7176 9% 12%,#0b0d0f 12% 21%);color:#646b70;font-size:2rem;font-weight:900;box-shadow:inset 0 0 42px #000,12px 18px 32px #000}
+
+/* HOTEL DELLE OMBRE */
+.theme-hotel .v1-wall{background:radial-gradient(circle at 50% 13%,rgba(142,46,101,.15),transparent 24%),repeating-linear-gradient(90deg,#2f1828 0 10%,#12080e 10% 11%,#3a1c31 11% 21%)!important}
+.theme-hotel .v1-floor{background:repeating-linear-gradient(90deg,#1b0d18 0 12%,#2a1323 12% 24%)!important}
+.theme-hotel .object-1:after{content:"";position:absolute;inset:5%;border:7px solid #301722;background:repeating-linear-gradient(180deg,#c2a78d 0 8%,#5c443a 8% 9%);box-shadow:0 13px 25px #000}
+.theme-hotel .object-2:after{content:"";position:absolute;left:20%;right:20%;top:8%;bottom:0;border-radius:50% 50% 18% 18%;background:radial-gradient(circle at 50% 72%,#d0a55a 0 10%,#4b2b20 11% 30%,#170c10 31%);box-shadow:0 0 28px rgba(208,165,90,.12)}
+.theme-hotel .object-3:after{content:"9944";position:absolute;inset:8%;display:grid;place-items:center;border:6px solid #3f2133;background:linear-gradient(90deg,#23121d,#080508,#25131f);color:#9f698a;font-weight:900;letter-spacing:.2em;box-shadow:inset 0 0 20px #000}
+.theme-hotel .object-4:after{content:"";position:absolute;inset:-55% -35%;background:radial-gradient(ellipse at 50% 20%,#e6d0a2 0 5%,#7a3a3c 6% 16%,transparent 17%);filter:drop-shadow(0 0 18px rgba(230,208,162,.2))}
+.theme-hotel .object-5:after{content:"−1";position:absolute;inset:0;display:grid;place-items:start center;padding-top:14%;border:9px solid #21101b;background:linear-gradient(90deg,#4a253e,#140a11 50%,#542a46);color:#a66f96;font-size:1.4rem;font-weight:900;box-shadow:inset 0 0 40px #000,12px 18px 32px #000}
+
+/* NAVE SENZA NOME */
+.theme-ship .v1-wall{background:radial-gradient(circle at 50% 14%,rgba(46,126,116,.14),transparent 25%),repeating-linear-gradient(90deg,#122d2d 0 14%,#061313 14% 15%,#1b3d3a 15% 29%)!important}
+.theme-ship .v1-floor{background:repeating-linear-gradient(90deg,#16100b 0 12%,#2d2118 12% 24%)!important}
+.theme-ship .object-1:after{content:"";position:absolute;inset:6%;background:linear-gradient(135deg,#a68959,#4d351f);clip-path:polygon(8% 0,100% 8%,91% 100%,0 91%);box-shadow:0 13px 25px #000}
+.theme-ship .object-2:after{content:"";position:absolute;inset:4%;border:8px solid #553d22;border-radius:50%;background:radial-gradient(circle,#d1c39f 0 44%,#2a2114 45% 53%,#0b1212 54%);box-shadow:0 13px 25px #000}
+.theme-ship .object-3:after{content:"";position:absolute;inset:1%;background:repeating-radial-gradient(circle at 50% 50%,#7a5b35 0 4%,#2e1f12 5% 9%);border-radius:50%;box-shadow:0 15px 25px #000}
+.theme-ship .object-4:after{content:"";position:absolute;inset:-60% -45%;border:8px solid #352719;border-radius:50%;background:radial-gradient(circle,#0b1110 0 18%,#765532 19% 26%,#1a130d 27%);box-shadow:0 14px 25px #000}
+.theme-ship .object-5:after{content:"";position:absolute;inset:0;border:9px solid #24180f;background:linear-gradient(90deg,#49321e,#15100b 50%,#563b23);box-shadow:inset 0 0 40px #000,12px 18px 32px #000}
+
+/* IL CERCHIO */
+.theme-ritual .v1-wall{background:radial-gradient(circle at 50% 54%,rgba(145,23,39,.28),transparent 26%),repeating-linear-gradient(90deg,#241117 0 14%,#0d0507 14% 15%,#33161c 15% 29%)!important}
+.theme-ritual .v1-floor{background:radial-gradient(circle at 58% 57%,rgba(139,22,38,.2),transparent 18%),repeating-linear-gradient(90deg,#12070a 0 12%,#241016 12% 24%)!important}
+.theme-ritual .object-1:after{content:"";position:absolute;inset:5%;border:7px solid #2f1117;background:linear-gradient(135deg,#4a1822,#140609);box-shadow:inset 0 0 24px #000,0 13px 25px #000}
+.theme-ritual .object-2:after{content:"";position:absolute;inset:2%;background:linear-gradient(90deg,transparent 42%,#3d171c 42% 58%,transparent 58%),radial-gradient(ellipse at 50% 22%,#a65c62 0 16%,#2a0c11 17% 28%,transparent 29%),radial-gradient(ellipse at 50% 78%,#a65c62 0 16%,#2a0c11 17% 28%,transparent 29%);filter:drop-shadow(0 12px 20px #000)}
+.theme-ritual .object-3:after{content:"";position:absolute;inset:0;background:conic-gradient(from 0deg,#8a2634 0 5%,transparent 5% 28%,#8a2634 28% 33%,transparent 33% 61%,#8a2634 61% 66%,transparent 66%);border-radius:50%;box-shadow:0 0 28px rgba(143,31,47,.18)}
+.theme-ritual .object-4:after{content:"";position:absolute;inset:-45% -40%;background:radial-gradient(ellipse at 50% 16%,#e4d3ad 0 4%,#7c202e 5% 12%,transparent 13%),linear-gradient(#381018,#160609);clip-path:polygon(18% 0,82% 0,100% 100%,0 100%);box-shadow:0 14px 25px #000}
+.theme-ritual .object-5:after{content:"";position:absolute;inset:-12%;border:8px solid #5c1724;border-radius:50%;background:radial-gradient(circle,transparent 0 37%,rgba(121,20,35,.22) 38% 41%,transparent 42%),conic-gradient(from 18deg,transparent 0 8%,#6f1b2a 8% 10%,transparent 10% 28%,#6f1b2a 28% 30%,transparent 30%);box-shadow:0 0 36px rgba(132,24,39,.25),inset 0 0 25px #000}
+
+/* Mobile */
 @media(max-width:520px){
  .room-hotspot:nth-of-type(1),.v1-object.object-1{left:3%!important;width:31%!important}
  .room-hotspot:nth-of-type(2),.v1-object.object-2{left:41%!important;width:18%!important}
