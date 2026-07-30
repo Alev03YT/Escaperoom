@@ -16,7 +16,7 @@
   <link rel="stylesheet" href="rooms-v2.css?v=1">
   <link rel="stylesheet" href="motel13-v2.css?v=2">
   <link rel="stylesheet" href="laboratorio-v2.css?v=1">
-  <link rel="stylesheet" href="museo-v2.css?v=1">
+  <link rel="stylesheet" href="museo-v2.css?v=2">
 </head>
 <body>
   <div class="noise"></div>
@@ -39,52 +39,20 @@
           <div><strong>4</strong><span>Difficoltà</span></div>
         </div>
       </section>
-
-      <section class="static-section-banner">
-        <span>COLLEZIONE PRINCIPALE</span>
-        <h2>Stanze Statiche Interattive</h2>
-        <p>Scene immersive, inventario, oggetti utilizzabili e puzzle progettati individualmente per ciascun caso.</p>
-      </section>
-
-      <section class="filters">
-        <button class="filter active" data-filter="all">Tutte</button>
-        <button class="filter" data-filter="mistero">🔎 Mistero</button>
-        <button class="filter" data-filter="horror">👻 Horror</button>
-        <button class="filter" data-filter="avventura">🧭 Avventura</button>
-        <button class="filter" data-filter="fantascienza">🚀 Sci‑Fi</button>
-      </section>
-
+      <section class="static-section-banner"><span>COLLEZIONE PRINCIPALE</span><h2>Stanze Statiche Interattive</h2><p>Scene immersive, inventario, oggetti utilizzabili e puzzle progettati individualmente per ciascun caso.</p></section>
+      <section class="filters"><button class="filter active" data-filter="all">Tutte</button><button class="filter" data-filter="mistero">🔎 Mistero</button><button class="filter" data-filter="horror">👻 Horror</button><button class="filter" data-filter="avventura">🧭 Avventura</button><button class="filter" data-filter="fantascienza">🚀 Sci‑Fi</button></section>
       <section class="difficulty-block"><div class="section-heading"><div><span class="level green">FACILE</span><h2>Prime fughe</h2></div><span>10–15 min</span></div><div class="room-grid" id="easyRooms"></div></section>
       <section class="difficulty-block"><div class="section-heading"><div><span class="level yellow">INTERMEDIO</span><h2>Indagini complesse</h2></div><span>15–25 min</span></div><div class="room-grid" id="mediumRooms"></div></section>
       <section class="difficulty-block"><div class="section-heading"><div><span class="level red">DIFFICILE</span><h2>Nessun errore</h2></div><span>20–35 min</span></div><div class="room-grid" id="hardRooms"></div></section>
       <section class="difficulty-block"><div class="section-heading"><div><span class="level purple">INCUBO</span><h2>Solo per esperti</h2></div><span>30–45 min</span></div><div class="room-grid" id="nightmareRooms"></div></section>
-
-      <section class="dynamic-coming">
-        <em>PROSSIMAMENTE</em>
-        <strong>Stanze Dinamiche Interattive</strong>
-        <p>Nuove esperienze con ambienti multipli, esplorazione avanzata e animazioni più profonde arriveranno dopo la Versione 1.0.</p>
-      </section>
+      <section class="dynamic-coming"><em>PROSSIMAMENTE</em><strong>Stanze Dinamiche Interattive</strong><p>Nuove esperienze con ambienti multipli, esplorazione avanzata e animazioni più profonde arriveranno dopo la Versione 1.0.</p></section>
     </main>
   </section>
-
   <section id="briefing" class="screen"><div class="briefing-bg" id="briefingBg"></div><div class="briefing-card"><button id="backHome" class="back">← Torna alle stanze</button><div id="briefingIcon" class="briefing-icon">🗄️</div><span id="briefingDifficulty" class="level green">FACILE</span><h1 id="briefingTitle">Archivio 47</h1><p id="briefingStory"></p><div class="briefing-meta"><div><strong id="briefingTime">15</strong><span>minuti</span></div><div><strong id="briefingPuzzles">4</strong><span>enigmi</span></div><div><strong id="briefingBest">—</strong><span>record</span></div></div><button id="playBtn" class="primary">INIZIA LA FUGA</button></div></section>
-
   <section id="game" class="screen"><header class="game-head"><button id="exitBtn" class="icon-btn">✕</button><div><span id="gameCase" class="case">CASO 01</span><strong id="gameTitle">Archivio 47</strong></div><div id="timer" class="timer">15:00</div></header><main class="scene"><div id="sceneBackdrop" class="scene-backdrop"></div><div id="sceneObjects" class="scene-objects"></div><div class="look-hint">Tocca gli oggetti presenti nella stanza</div></main><aside class="inventory"><div class="inventory-title">INVENTARIO</div><div id="inventoryItems" class="inventory-items"><span class="empty">Vuoto</span></div></aside><nav class="game-nav"><button id="hintBtn">💡 Indizio <span id="hintCount">3</span></button><button id="notesBtn">🗒️ Appunti</button><button id="soundBtn">🔊 Audio</button></nav></section>
-
   <section id="ending" class="screen"><div class="ending-card"><div class="ending-badge">FUGA COMPLETATA</div><div id="endingIcon" class="ending-icon">🏆</div><h1 id="endingTitle">Caso risolto</h1><p id="endingText"></p><div id="earnedStars" class="stars">★★★</div><div class="ending-stats"><div><strong id="finalTime">00:00</strong><span>Tempo rimasto</span></div><div><strong id="finalHints">0</strong><span>Indizi usati</span></div></div><button id="nextRoomBtn" class="primary">PROSSIMA STANZA</button><button id="endingHomeBtn" class="secondary">TORNA AL MENU</button></div></section>
-
   <div id="accountModal" class="account-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="accountTitle"><section class="account-panel"><button id="closeAccount" class="account-close" aria-label="Chiudi">×</button><div class="account-logo">EV</div><div id="accountGuest"><p class="account-eyebrow">ACCOUNT ESCAPEVERSE</p><h2 id="accountTitle">Salva ogni tua fuga</h2><p class="account-muted">Accedi per sincronizzare progressi, record e obiettivi su tutti i dispositivi.</p><div class="account-tabs"><button class="active" data-account-tab="login">Accedi</button><button data-account-tab="register">Registrati</button></div><form id="accountForm"><label>Email<input id="accountEmail" type="email" autocomplete="email" required></label><label>Password<input id="accountPassword" type="password" minlength="8" autocomplete="current-password" required></label><label id="nameField" class="hidden">Nome<input id="accountName" type="text" maxlength="40" autocomplete="name"></label><button id="accountSubmit" class="account-primary" type="submit">ACCEDI</button></form><button id="forgotPassword" class="account-link" type="button">Password dimenticata?</button><p id="accountError" class="account-error" role="alert"></p></div><div id="accountUser" class="hidden"><p class="account-eyebrow">PROFILO GIOCATORE</p><div class="profile-head"><div class="profile-avatar">👤</div><div><h2 id="profileName">Giocatore</h2><p id="profileEmail" class="account-muted"></p></div></div><div class="profile-stats"><div><strong id="cloudCompleted">0</strong><span>Completate</span></div><div><strong id="cloudStars">0</strong><span>Stelle</span></div><div><strong id="cloudRecords">0</strong><span>Record</span></div></div><a id="adminAccess" class="account-admin hidden" href="admin.html">🛠️ Apri pannello amministratore</a><button id="logoutAccount" class="account-secondary" type="button">Esci dall’account</button></div></section></div>
-
   <div id="modal" class="modal hidden"><div class="modal-card"><button id="closeModal" class="close">×</button><div id="modalContent"></div></div></div>
-  <script src="script.js"></script>
-  <script src="interactive-room.js"></script>
-  <script src="v1-engine.js"></script>
-  <script src="v1-finish.js"></script>
-  <script src="archive47-v2.js?v=2"></script>
-  <script src="rooms-v2.js?v=1"></script>
-  <script src="motel13-v2.js?v=2"></script>
-  <script src="laboratorio-v2.js?v=1"></script>
-  <script src="museo-v2.js?v=1"></script>
-  <script type="module" src="account.js"></script>
+  <script src="script.js"></script><script src="interactive-room.js"></script><script src="v1-engine.js"></script><script src="v1-finish.js"></script><script src="archive47-v2.js?v=2"></script><script src="rooms-v2.js?v=1"></script><script src="motel13-v2.js?v=2"></script><script src="laboratorio-v2.js?v=1"></script><script src="museo-v2.js?v=2"></script><script type="module" src="account.js"></script>
 </body>
 </html>
