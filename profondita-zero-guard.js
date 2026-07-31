@@ -1,28 +1,15 @@
-/* Profondità Zero — blocco definitivo del motore generico */
+/* Compatibilità vecchie build: forza il caricamento dell'index aggiornato. */
 (() => {
-  function protect(selector, active, handler) {
-    const element = document.querySelector(selector);
-    if (!element) return;
-    element.addEventListener('click', event => {
-      if (!active()) return;
-      event.preventDefault();
-      event.stopPropagation();
-      event.stopImmediatePropagation();
-      handler(element, event);
-    }, true);
-  }
+  const BUILD = '202607312148';
+  const hasV3 = [...document.scripts].some(s => (s.getAttribute('src') || '').includes('profondita-zero-v3.js'));
 
-  const isDepthRoom = () => typeof selected !== 'undefined' && selected && selected.id === 'sottomarino';
+  if (hasV3) return;
 
-  protect('#playBtn', isDepthRoom, (button, event) => {
-    if (typeof button.onclick === 'function') button.onclick.call(button, event);
-  });
+  const key = `escapeverse-depth-migration-${BUILD}`;
+  if (sessionStorage.getItem(key)) return;
+  sessionStorage.setItem(key, '1');
 
-  protect('#hintBtn', isDepthRoom, (button, event) => {
-    if (typeof button.onclick === 'function') button.onclick.call(button, event);
-  });
-
-  protect('#notesBtn', isDepthRoom, (button, event) => {
-    if (typeof button.onclick === 'function') button.onclick.call(button, event);
-  });
+  const url = new URL(window.location.href);
+  url.searchParams.set('build', BUILD);
+  window.location.replace(url.toString());
 })();
