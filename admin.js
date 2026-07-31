@@ -2,9 +2,53 @@ import { firebaseConfig, firebaseConfigured, ADMIN_EMAIL } from './firebase-conf
 
 const $ = (selector) => document.querySelector(selector);
 const states = ['setupState', 'loginState', 'deniedState', 'dashboardState'];
+const roomIds = ['archivio47','motel13','laboratorio','museo','bunker','sottomarino','tempio','astronave','prigione','hotel','navefantasma','culto'];
 const showState = (id) => states.forEach((x) => document.getElementById(x)?.classList.toggle('hidden', x !== id));
 const escapeHtml = (value = '') => String(value).replace(/[&<>'"]/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
 function toast(message) { const el=$('#toast'); el.textContent=message; el.classList.remove('hidden'); clearTimeout(toast.t); toast.t=setTimeout(()=>el.classList.add('hidden'),2800); }
+
+function getLocalProgress(){
+  try{return JSON.parse(localStorage.getItem('escapeProgress')||'{}')||{};}
+  catch{return {};}
+}
+function saveLocalProgress(progress){
+  localStorage.setItem('escapeProgress',JSON.stringify(progress));
+  localStorage.setItem('escapeAdminUnlocked','true');
+  updateDevProgressStatus();
+}
+function updateDevProgressStatus(){
+  const status=$('#devProgressStatus');
+  if(!status)return;
+  const progress=getLocalProgress();
+  const completed=roomIds.filter(id=>progress[id]?.completed).length;
+  const stars=roomIds.reduce((sum,id)=>sum+(Number(progress[id]?.stars)||0),0);
+  status.textContent=`Progressi locali: ${completed}/12 stanze completate · ${stars}/36 stelle`;
+}
+function unlockAllRooms(){
+  const progress=getLocalProgress();
+  roomIds.slice(0,-1).forEach((id,index)=>{
+    const current=progress[id]||{};
+    progress[id]={...current,completed:true,stars:Math.max(Number(current.stars)||0,1),best:current.best||'ADMIN'};
+  });
+  saveLocalProgress(progress);
+  toast('Tutte le stanze sono state sbloccate');
+}
+function completeAllRooms(){
+  const progress=getLocalProgress();
+  roomIds.forEach(id=>{
+    const current=progress[id]||{};
+    progress[id]={...current,completed:true,stars:3,best:current.best||'ADMIN'};
+  });
+  saveLocalProgress(progress);
+  toast('Tutte le stanze completate con 3 stelle');
+}
+function resetAllProgress(){
+  if(!confirm('Vuoi azzerare definitivamente tutti i progressi salvati su questo dispositivo?'))return;
+  localStorage.removeItem('escapeProgress');
+  localStorage.removeItem('escapeAdminUnlocked');
+  updateDevProgressStatus();
+  toast('Progressi azzerati');
+}
 
 if (!firebaseConfigured) {
   showState('setupState');
@@ -38,6 +82,7 @@ if (!firebaseConfigured) {
     if(settingsSnap.exists()){const s=settingsSnap.data();$('#globalMessage').value=s.globalMessage||'';$('#maintenanceMode').checked=s.maintenanceMode===true;}
     document.querySelectorAll('[data-edit-room]').forEach(b=>b.onclick=()=>editRoom(b.dataset.editRoom));
     document.querySelectorAll('[data-delete-room]').forEach(b=>b.onclick=()=>removeRoom(b.dataset.deleteRoom));
+    updateDevProgressStatus();
   }
 
   async function editRoom(id){const snap=await getDoc(doc(db,'rooms',id));if(!snap.exists())return;const r=snap.data();$('#roomId').value=id;$('#roomTitle').value=r.title||'';$('#roomTheme').value=r.theme||'mistero';$('#roomDifficulty').value=r.difficulty||'facile';$('#roomMinutes').value=r.minutes||15;$('#roomDescription').value=r.description||'';$('#roomPublished').checked=r.published!==false;$('#cancelEditBtn').classList.remove('hidden');window.scrollTo({top:document.querySelector('#roomForm').offsetTop-20,behavior:'smooth'});}
@@ -52,6 +97,10 @@ if (!firebaseConfigured) {
   $('#loginForm').addEventListener('submit',async(e)=>{e.preventDefault();$('#loginError').textContent='';try{await signInWithEmailAndPassword(auth,$('#email').value.trim(),$('#password').value);}catch(err){console.error(err);$('#loginError').textContent='Email o password non corretti, oppure account non ancora autorizzato.';}});
   $('#resetPasswordBtn').onclick=async()=>{const email=$('#email').value.trim()||ADMIN_EMAIL;try{await sendPasswordResetEmail(auth,email);toast('Email per reimpostare la password inviata');}catch(e){console.error(e);toast('Impossibile inviare l’email di recupero');}};
   $('#logoutBtn').onclick=()=>signOut(auth); $('#deniedLogout').onclick=()=>signOut(auth);
+
+  $('#unlockAllRoomsBtn').onclick=unlockAllRooms;
+  $('#completeAllRoomsBtn').onclick=completeAllRooms;
+  $('#resetProgressBtn').onclick=resetAllProgress;
 
   $('#roomForm').addEventListener('submit',async(e)=>{e.preventDefault();const existing=$('#roomId').value.trim();const id=existing||crypto.randomUUID();await setDoc(doc(db,'rooms',id),{title:$('#roomTitle').value.trim(),theme:$('#roomTheme').value,difficulty:$('#roomDifficulty').value,minutes:Number($('#roomMinutes').value),description:$('#roomDescription').value.trim(),published:$('#roomPublished').checked,updatedAt:serverTimestamp(),createdAt:existing?undefined:serverTimestamp()},{merge:true});resetRoomForm();toast(existing?'Stanza aggiornata':'Stanza creata');await loadDashboard();});
   $('#cancelEditBtn').onclick=resetRoomForm;
