@@ -1,44 +1,179 @@
-/* EscapeVerse Rooms V2 — motore premium per le 11 stanze successive */
+/* EscapeVerse — router prioritario stanze premium */
 (() => {
-  const $ = s => document.querySelector(s);
-  const configs = {
-    motel13:{title:'Motel 13',subtitle:'Camera fuori mappa',accent:'#b64a3b',scene:'motel',intro:'La porta si chiude. Il telefono squilla una sola volta, poi la camera torna nel silenzio.',objects:[['frame','Quadro storto'],['phone','Telefono'],['nightstand','Comodino'],['suitcase','Valigia'],['mirror','Specchio'],['bath','Bagno'],['tv','Televisore'],['door','Porta 13']],steps:[
-      {id:'frame',title:'Quadro storto',text:'Dietro la cornice trovi una ricevuta: chiamata registrata alle 23:16.',add:['Ricevuta 23:16','🧾'],note:'La chiamata della camera 13 è stata registrata alle 23:16.'},
-      {id:'phone',need:'Ricevuta 23:16',title:'Telefono',text:'Componi 2316. Una voce sussurra: “sotto il comodino”.',add:['Chiave valigia','🗝️']},
-      {id:'nightstand',title:'Comodino',text:'Sotto il cassetto trovi il numero 13 inciso nel legno.',add:['Nota camera 13','📝']},
-      {id:'suitcase',need:'Chiave valigia',title:'Valigia',text:'La chiave apre la valigia. Dentro c’è un frammento di specchio.',add:['Frammento di specchio','🔺']},
-      {id:'mirror',need:'Frammento di specchio',title:'Specchio',text:'Il frammento completa la superficie e rivela la scritta “TV 13”.',add:['Gettone TV','🪙']},
-      {id:'tv',need:'Gettone TV',title:'Televisore',text:'Il canale 13 mostra per un istante una tessera appesa nel bagno.',add:['Codice bagno','📺']},
-      {id:'bath',need:'Codice bagno',title:'Bagno',text:'Dietro lo specchio appannato trovi la tessera magnetica.',add:['Tessera Motel 13','🎫']},
-      {id:'door',need:'Tessera Motel 13',code:'2316',title:'Porta 13',text:'Passa la tessera e inserisci l’orario della chiamata.'}
-    ]},
-    laboratorio:{title:'Protocollo X',subtitle:'Laboratorio in sterilizzazione',accent:'#38abb0',scene:'lab',intro:'Le paratie si sigillano. Una voce automatica annuncia la sterilizzazione totale.',objects:[['log','Registro'],['scope','Microscopio'],['incubator','Incubatore'],['locker','Armadietto'],['panel','Quadro elettrico'],['terminal','Terminale'],['alarm','Allarme'],['door','Uscita sterile']],steps:[
-      {id:'log',title:'Registro tecnico',text:'Campione 08 stabilizzato alle 14:25.',add:['Registro campione 08','📋']},{id:'scope',need:'Registro campione 08',title:'Microscopio',text:'Il vetrino 08 mostra la sequenza 1-4-2-5.',add:['Sequenza 1425','🔬']},{id:'incubator',need:'Sequenza 1425',title:'Incubatore',text:'Inserendo 1425 si apre il vano sterile.',add:['Chiave sterile','🔑']},{id:'locker',need:'Chiave sterile',title:'Armadietto',text:'All’interno trovi un fusibile criogenico.',add:['Fusibile criogenico','🔌']},{id:'panel',need:'Fusibile criogenico',title:'Quadro elettrico',text:'Il fusibile ripristina il terminale principale.',add:['Energia ripristinata','⚡']},{id:'terminal',need:'Energia ripristinata',title:'Terminale',text:'Il protocollo richiede l’identità del campione 08.',add:['Badge soggetto 08','🪪']},{id:'alarm',need:'Badge soggetto 08',title:'Allarme',text:'Il badge interrompe il blocco d’emergenza.',add:['Autorizzazione uscita','✅']},{id:'door',need:'Autorizzazione uscita',code:'1425',title:'Uscita sterile',text:'Inserisci l’ora di stabilizzazione.'}
-    ]},
-    museo:{title:'Il Museo Silenzioso',subtitle:'Ala notturna',accent:'#b18a43',scene:'museum',intro:'Le luci di sicurezza si accendono. Il sistema ti identifica come intruso.',objects:[['statue','Statua'],['plaque','Targhetta'],['map','Mappa'],['candle','Candelabro'],['case','Vetrina'],['office','Banco custode'],['sensor','Sensore'],['door','Portone']],steps:[{id:'statue',title:'Statua assente',text:'Sulla base resta polvere fresca e la sigla 26.',add:['Sigla reperto 26','🏷️']},{id:'plaque',need:'Sigla reperto 26',title:'Targhetta',text:'Il reperto 26 fu restaurato alle 19:42.',add:['Scheda restauro','📜']},{id:'map',need:'Scheda restauro',title:'Mappa',text:'La sala 19 conduce alla teca 42.',add:['Percorso 19-42','🗺️']},{id:'candle',need:'Percorso 19-42',title:'Candelabro',text:'Ruotandolo si libera una chiave antica.',add:['Chiave antica','🗝️']},{id:'case',need:'Chiave antica',title:'Vetrina',text:'Dentro trovi il sigillo del reperto 26.',add:['Sigillo 26','🔘']},{id:'office',need:'Sigillo 26',title:'Banco custode',text:'Il sigillo apre un cassetto con il pass.',add:['Pass custode','🎟️']},{id:'sensor',need:'Pass custode',title:'Sensore',text:'Il sistema riconosce il pass e abilita il portone.',add:['Portone abilitato','✅']},{id:'door',need:'Portone abilitato',code:'1942',title:'Portone principale',text:'Inserisci l’ora del restauro.'}]},
-    bunker:{title:'Bunker Omega',subtitle:'Settore comando',accent:'#9da735',scene:'bunker',intro:'Una sirena lontana riparte. Il conto alla rovescia nucleare è già attivo.',objects:[['radio','Radio'],['clock','Cronometro'],['archive','Archivio'],['locker','Armadietto'],['power','Quadro elettrico'],['console','Console'],['lever','Leva'],['door','Portello']],steps:[{id:'radio',title:'Radio militare',text:'La trasmissione scandisce: squadra 31, sincronizzazione 06:18.',add:['Trascrizione radio','📄']},{id:'clock',need:'Trascrizione radio',title:'Cronometro',text:'Regolato su 06:18 libera la chiave dell’archivio.',add:['Chiave archivio','🔑']},{id:'archive',need:'Chiave archivio',title:'Archivio Omega',text:'Nel fascicolo 31 trovi lo schema del quadro.',add:['Schema elettrico','📐']},{id:'power',need:'Schema elettrico',title:'Quadro elettrico',text:'Seguendo lo schema ripristini il circuito rosso.',add:['Circuito attivo','⚡']},{id:'locker',need:'Circuito attivo',title:'Armadietto',text:'L’elettroserratura si apre: dentro c’è una carta comando.',add:['Carta comando','💳']},{id:'console',need:'Carta comando',title:'Console',text:'La carta arresta il conto alla rovescia.',add:['Blocco arrestato','🛑']},{id:'lever',need:'Blocco arrestato',title:'Leva portello',text:'La leva ora può essere armata.',add:['Leva armata','🕹️']},{id:'door',need:'Leva armata',code:'0618',title:'Portello Omega',text:'Inserisci l’ora di sincronizzazione.'}]},
-    sottomarino:{title:'Profondità Zero',subtitle:'Ponte di comando',accent:'#2f8db5',scene:'sub',intro:'Lo scafo geme. L’ossigeno scende e nessuno risponde dagli altri compartimenti.',objects:[['compass','Bussola'],['log','Diario'],['safe','Cassaforte'],['sonar','Sonar'],['valve','Valvola'],['engine','Motore'],['wheel','Ruota stagna'],['door','Camera stagna']],steps:[{id:'log',title:'Diario di bordo',text:'Immersione alle 04:37, settore 52.',add:['Diario 04:37','📘']},{id:'compass',need:'Diario 04:37',title:'Bussola',text:'Portata sul settore 52 indica un pannello nascosto.',add:['Coordinate 52','🧭']},{id:'safe',need:'Coordinate 52',title:'Cassaforte',text:'La combinazione 5237 apre la cassaforte.',add:['Scheda sonar','💳']},{id:'sonar',need:'Scheda sonar',title:'Sonar',text:'La scheda localizza una valvola bloccata.',add:['Chiave valvola','🔧']},{id:'valve',need:'Chiave valvola',title:'Valvola',text:'La pressione torna nel circuito motore.',add:['Pressione ripristinata','🌡️']},{id:'engine',need:'Pressione ripristinata',title:'Motore ausiliario',text:'Il motore libera la manovella stagna.',add:['Manovella','⚙️']},{id:'wheel',need:'Manovella',title:'Ruota stagna',text:'La manovella sblocca la camera di fuga.',add:['Camera sbloccata','✅']},{id:'door',need:'Camera sbloccata',code:'0437',title:'Camera stagna',text:'Inserisci l’ora dell’immersione.'}]},
-    tempio:{title:'Tempio del Sole Nero',subtitle:'Camera dell’eclissi',accent:'#d08738',scene:'temple',intro:'Il passaggio crolla alle tue spalle. Le pareti iniziano lentamente a stringersi.',objects:[['scroll','Pergamena'],['disc','Disco solare'],['idol','Idolo'],['urn','Urna'],['wall','Parete incisa'],['altar','Altare'],['medal','Sigillo'],['door','Portale']],steps:[{id:'scroll',title:'Pergamena',text:'Eclissi alle 17:33, dinastia 64.',add:['Pergamena eclissi','📜']},{id:'disc',need:'Pergamena eclissi',title:'Disco solare',text:'Allineato su 17:33 rivela l’occhio di pietra.',add:['Occhio di pietra','🔶']},{id:'idol',need:'Occhio di pietra',title:'Idolo',text:'L’occhio completa il volto e apre una nicchia.',add:['Scalpello rituale','⛏️']},{id:'wall',need:'Scalpello rituale',title:'Parete incisa',text:'Dietro l’incisione 64 trovi una chiave di bronzo.',add:['Chiave di bronzo','🗝️']},{id:'urn',need:'Chiave di bronzo',title:'Urna',text:'L’urna contiene metà del medaglione.',add:['Mezzo medaglione','🌓']},{id:'altar',need:'Mezzo medaglione',title:'Altare',text:'L’altare completa il medaglione del Sole Nero.',add:['Medaglione solare','🏅']},{id:'medal',need:'Medaglione solare',title:'Sigillo del portale',text:'Il medaglione attiva il portale.',add:['Portale attivo','☀️']},{id:'door',need:'Portale attivo',code:'1733',title:'Portale',text:'Inserisci l’ora dell’eclissi.'}]},
-    astronave:{title:'Nave Eos',subtitle:'Ponte criogenico',accent:'#657fe0',scene:'space',intro:'La capsula si apre. Eos è fuori rotta e l’intelligenza di bordo non riconosce il tuo ID.',objects:[['pod','Capsula'],['log','Terminale'],['stars','Mappa stellare'],['core','Nucleo'],['bay','Vano tecnico'],['ai','Interfaccia IA'],['escape','Capsula fuga'],['door','Portello']],steps:[{id:'pod',title:'Capsula criogenica',text:'Sul vetro: risveglio 02:49, equipaggio 73.',add:['Log criogenico','💾']},{id:'log',need:'Log criogenico',title:'Terminale',text:'Il profilo 73 sblocca la mappa stellare.',add:['Accesso profilo 73','🪪']},{id:'stars',need:'Accesso profilo 73',title:'Mappa stellare',text:'La rotta 7349 evidenzia il nucleo secondario.',add:['Rotta 7349','🪐']},{id:'core',need:'Rotta 7349',title:'Nucleo',text:'Il nucleo espelle una cella energetica.',add:['Cella energia','🔋']},{id:'bay',need:'Cella energia',title:'Vano tecnico',text:'La cella alimenta l’interfaccia di bordo.',add:['Sistema alimentato','⚡']},{id:'ai',need:'Sistema alimentato',title:'Interfaccia IA',text:'Eos riconosce finalmente il comandante 73.',add:['ID comandante','🪪']},{id:'escape',need:'ID comandante',title:'Capsula di fuga',text:'La capsula è pronta al lancio.',add:['Lancio autorizzato','✅']},{id:'door',need:'Lancio autorizzato',code:'0249',title:'Portello di lancio',text:'Inserisci l’ora del risveglio.'}]},
-    prigione:{title:'Blocco K',subtitle:'Ala di isolamento',accent:'#7c8792',scene:'prison',intro:'Le luci lampeggiano. Le guardie sono scomparse, ma le telecamere continuano a seguirti.',objects:[['paper','Giornale'],['clock','Orologio'],['locker','Armadietto'],['camera','Telecamera'],['wall','Muro'],['desk','Postazione guardia'],['gate','Comando cancello'],['door','Cancello']],steps:[{id:'paper',title:'Giornale',text:'Rivolta alle 21:05. Detenuto 88.',add:['Ritaglio rivolta','📰']},{id:'clock',need:'Ritaglio rivolta',title:'Orologio',text:'Posizionato sulle 21:05 apre un vano.',add:['Chiave armadietto','🗝️']},{id:'locker',need:'Chiave armadietto',title:'Armadietto',text:'Dentro trovi un martello e il numero 88.',add:['Martello','🔨']},{id:'wall',need:'Martello',title:'Muro debole',text:'Dietro l’intonaco trovi il cavo della telecamera.',add:['Cavo telecamera','🔌']},{id:'camera',need:'Cavo telecamera',title:'Telecamera',text:'Scollegandola cade un badge da guardia.',add:['Badge guardia','🪪']},{id:'desk',need:'Badge guardia',title:'Postazione guardia',text:'Il badge abilita il pannello del cancello.',add:['Pannello abilitato','✅']},{id:'gate',need:'Pannello abilitato',title:'Comando cancello',text:'Il comando richiede il codice dell’evento.',add:['Cancello pronto','🔓']},{id:'door',need:'Cancello pronto',code:'2105',title:'Cancello Blocco K',text:'Inserisci l’ora della rivolta.'}]},
-    hotel:{title:'Hotel delle Ombre',subtitle:'Piano inesistente',accent:'#a33b78',scene:'hotel',intro:'L’ascensore scompare dietro di te. Le porte del corridoio sembrano respirare.',objects:[['book','Registro'],['bell','Campanello'],['trunk','Baule'],['candle','Candela'],['hall','Corridoio'],['room','Camera 99'],['token','Ascensore'],['door','Porte ascensore']],steps:[{id:'book',title:'Registro ospiti',text:'Ultimo arrivo 00:44. Ospite 99.',add:['Pagina ospite 99','📖']},{id:'bell',need:'Pagina ospite 99',title:'Campanello',text:'Suonato 9 volte e poi 9 libera una chiave.',add:['Chiave 99','🗝️']},{id:'trunk',need:'Chiave 99',title:'Baule',text:'Dentro trovi una candela nera ancora calda.',add:['Candela nera','🕯️']},{id:'candle',need:'Candela nera',title:'Portacandela',text:'La fiamma rivela impronte verso la camera 99.',add:['Traccia d’ombra','👣']},{id:'hall',need:'Traccia d’ombra',title:'Corridoio',text:'Seguendo le impronte trovi la maniglia della camera.',add:['Maniglia 99','🚪']},{id:'room',need:'Maniglia 99',title:'Camera 99',text:'Sul letto c’è il gettone dell’ascensore.',add:['Gettone ascensore','🪙']},{id:'token',need:'Gettone ascensore',title:'Pannello ascensore',text:'Il gettone riattiva il pannello.',add:['Ascensore attivo','✅']},{id:'door',need:'Ascensore attivo',code:'0044',title:'Ascensore',text:'Inserisci l’ora dell’ultimo arrivo.'}]},
-    navefantasma:{title:'La Nave Senza Nome',subtitle:'Ponte nella nebbia',accent:'#318f82',scene:'ghostship',intro:'La costa scompare. Le vele si spiegano senza vento e il ponte scricchiola sotto i tuoi piedi.',objects:[['log','Diario'],['compass','Bussola'],['chest','Baule'],['mast','Albero'],['winch','Argano'],['wheel','Timone'],['medal','Cabina'],['door','Porta cabina']],steps:[{id:'log',title:'Diario bagnato',text:'Ultimo avvistamento 03:27. Rotta 66.',add:['Diario del capitano','📜']},{id:'compass',need:'Diario del capitano',title:'Bussola',text:'Orientata sulla rotta 66 indica il baule.',add:['Rotta 66','🧭']},{id:'chest',need:'Rotta 66',title:'Baule',text:'La combinazione 6627 libera una chiave d’osso.',add:['Chiave d’osso','🦴']},{id:'mast',need:'Chiave d’osso',title:'Albero maestro',text:'La chiave apre un piccolo vano con un gancio.',add:['Gancio','🪝']},{id:'winch',need:'Gancio',title:'Argano',text:'Il gancio recupera dal mare un medaglione.',add:['Medaglione pirata','☠️']},{id:'wheel',need:'Medaglione pirata',title:'Timone',text:'Il medaglione blocca il timone sulla rotta corretta.',add:['Rotta stabilizzata','⚓']},{id:'medal',need:'Rotta stabilizzata',title:'Cabina',text:'La serratura della cabina torna visibile.',add:['Cabina sbloccata','✅']},{id:'door',need:'Cabina sbloccata',code:'0327',title:'Porta cabina',text:'Inserisci l’ora dell’ultimo avvistamento.'}]},
-    culto:{title:'Il Cerchio',subtitle:'Cripta rituale',accent:'#a52b35',scene:'cult',intro:'Il cerchio sul pavimento pulsa. Qualcosa si muove dietro la porta sigillata.',objects:[['book','Libro'],['glass','Clessidra'],['relic','Reliquiario'],['altar','Altare'],['circle','Cerchio'],['statue','Statua'],['seal','Sigillo'],['door','Porta rituale']],steps:[{id:'book',title:'Libro rituale',text:'Rito alle 11:59. Sigillo 77.',add:['Pagina rituale','📕']},{id:'glass',need:'Pagina rituale',title:'Clessidra',text:'Fermata su 11:59 libera la chiave cremisi.',add:['Chiave cremisi','🗝️']},{id:'relic',need:'Chiave cremisi',title:'Reliquiario',text:'Dentro riposa un pugnale senza luce.',add:['Pugnale spento','🗡️']},{id:'altar',need:'Pugnale spento',title:'Altare',text:'Il pugnale incide il simbolo 77 e si accende.',add:['Pugnale rituale','🔥']},{id:'circle',need:'Pugnale rituale',title:'Cerchio',text:'Completi la linea mancante del cerchio.',add:['Cerchio completo','🔻']},{id:'statue',need:'Cerchio completo',title:'Statua',text:'La statua lascia cadere il sigillo finale.',add:['Sigillo 77','🔻']},{id:'seal',need:'Sigillo 77',title:'Porta sigillata',text:'Il sigillo si incastra nella porta.',add:['Porta rituale attiva','✅']},{id:'door',need:'Porta rituale attiva',code:'1159',title:'Porta del cerchio',text:'Inserisci l’ora del rito.'}]}
-  };
+  const $ = (s) => document.querySelector(s);
+  const sea = { selected: null, sonar: [], switches: [], valves: [] };
 
-  let runtime={selectedItem:null,index:0,done:new Set()};
-  const oldPlay=$('#playBtn').onclick, oldHint=$('#hintBtn').onclick, oldNotes=$('#notesBtn').onclick;
-  const has=n=>state?.inventory?.some(i=>i.name===n);
-  function add(item){if(item&&!has(item[0]))state.inventory.push({name:item[0],icon:item[1]});drawInventory()}
-  function remove(n){state.inventory=state.inventory.filter(i=>i.name!==n);if(runtime.selectedItem===n)runtime.selectedItem=null;drawInventory()}
-  function drawInventory(){const b=$('#inventoryItems');b.innerHTML=state.inventory.length?state.inventory.map(i=>`<button class="inventory-item rv2-item ${runtime.selectedItem===i.name?'selected':''}" data-rv2-item="${i.name}"><span>${i.icon}</span>${i.name}</button>`).join(''):'<span class="empty">Vuoto</span>';b.querySelectorAll('[data-rv2-item]').forEach(x=>x.onclick=()=>{runtime.selectedItem=runtime.selectedItem===x.dataset.rv2Item?null:x.dataset.rv2Item;drawInventory();status(runtime.selectedItem?`${runtime.selectedItem} selezionato`:'Oggetto deselezionato')})}
-  function status(t){const e=$('.rv2-status');if(!e)return;e.textContent=t;clearTimeout(status.t);status.t=setTimeout(()=>e.textContent='Tocca gli elementi della stanza',2500)}
-  function drawScene(c){$('#sceneBackdrop').style.background='transparent';$('#sceneObjects').innerHTML=`<div class="rv2-scene rv2-${c.scene}" style="--rv2-accent:${c.accent}"><div class="rv2-backwall"></div><div class="rv2-floor"></div><div class="rv2-ambient"></div>${c.objects.map((o,i)=>`<button class="rv2-object rv2-pos-${i} ${runtime.done.has(o[0])?'solved':''}" data-rv2="${o[0]}"><span class="rv2-symbol">${['▤','◉','▣','◇','◌','▥','⬡','▰'][i]}</span><span>${o[1]}</span></button>`).join('')}<div class="rv2-status">Tocca gli elementi della stanza</div></div>`;document.querySelectorAll('[data-rv2]').forEach(x=>x.onclick=()=>interact(c,x.dataset.rv2))}
-  function begin(c){clearInterval(timerId);state={time:selected.minutes*60,hints:selected.difficulty==='nightmare'?2:3,hintsUsed:0,step:0,inventory:[],notes:[],escaped:false};runtime={selectedItem:null,index:0,done:new Set()};$('#gameCase').textContent=selected.case;$('#gameTitle').textContent=`${c.title} — ${c.subtitle}`;$('#hintCount').textContent=state.hints;drawScene(c);drawInventory();updateTimer();show('game');setTimeout(()=>modal(`<h2>${c.title}</h2><p>${c.intro}</p><p><strong>Esplora direttamente la scena:</strong> gli oggetti reagiscono al tuo progresso e agli strumenti selezionati.</p><button id="rv2start" class="action-btn">ENTRA NELLA STANZA</button>`),100);setTimeout(()=>{const b=$('#rv2start');if(b)b.onclick=closeModal},180);timerId=setInterval(()=>{if(state.time>0&&!state.escaped){state.time--;updateTimer()}else if(!state.escaped){clearInterval(timerId);modal('<h2>Tempo scaduto</h2><p>La stanza si sigilla definitivamente.</p>')}},1000)}
-  function interact(c,id){const step=c.steps[runtime.index];if(runtime.done.has(id))return modal(`<h2>${c.objects.find(o=>o[0]===id)?.[1]||'Oggetto'}</h2><p>Qui hai già trovato tutto ciò che serviva.</p>`);if(id!==step.id)return modal(`<h2>${c.objects.find(o=>o[0]===id)?.[1]||'Oggetto'}</h2><p>${runtime.index===0?'Osserva meglio: il primo indizio è visibile senza strumenti.':'Non sembra ancora il momento giusto per usarlo.'}</p>`);if(step.need&&!has(step.need))return modal(`<h2>${step.title}</h2><p>Serve <strong>${step.need}</strong>. Se lo possiedi, selezionalo nell’inventario.</p>`);if(step.need&&runtime.selectedItem!==step.need)return modal(`<h2>${step.title}</h2><p>Seleziona <strong>${step.need}</strong> nell’inventario, poi tocca di nuovo questo elemento.</p>`);if(step.code)return codePuzzle(c,step);if(step.need)remove(step.need);runtime.done.add(id);runtime.index++;state.step=runtime.index;add(step.add);state.notes.push(step.text);drawScene(c);modal(`<h2>${step.title}</h2><p>${step.text}</p>${step.add?`<p class="tool-success">Hai ottenuto: ${step.add[1]} ${step.add[0]}</p>`:''}`)}
-  function codePuzzle(c,step){modal(`<h2>${step.title}</h2><p>${step.text}</p><div class="code-input"><input id="rv2code" inputmode="numeric" maxlength="4" placeholder="0000"><button id="rv2unlock">SBLOCCA</button></div><p id="rv2msg"></p>`);setTimeout(()=>$('#rv2unlock').onclick=()=>{if($('#rv2code').value===step.code){runtime.done.add(step.id);drawScene(c);finish()}else $('#rv2msg').innerHTML='<span class="error">Codice errato. Controlla gli appunti.</span>'},0)}
-  function hint(c){if(state.hints<=0)return modal('<h2>Nessun indizio rimasto</h2><p>Rileggi gli appunti e prova a usare gli oggetti raccolti.</p>');const s=c.steps[runtime.index];state.hints--;state.hintsUsed++;$('#hintCount').textContent=state.hints;modal(`<h2>Indizio</h2><p>Concentrati su <strong>${s.title}</strong>${s.need?` e usa <strong>${s.need}</strong>`:''}.</p>`)}
-  $('#playBtn').onclick=()=>{const c=configs[selected?.id];return c?begin(c):oldPlay()};
-  $('#hintBtn').onclick=()=>{const c=configs[selected?.id];return c?hint(c):oldHint()};
-  $('#notesBtn').onclick=()=>{const c=configs[selected?.id];if(!c)return oldNotes();modal(`<h2>Appunti</h2>${state.notes.length?'<ul>'+state.notes.map(n=>`<li>${n}</li>`).join('')+'</ul>':'<p>Non hai ancora scoperto nulla.</p>'}`)};
+  const isDepth = () => typeof selected !== 'undefined' && selected?.id === 'sottomarino';
+  const has = (name) => state?.inventory?.some((item) => item.name === name);
+  const chosen = (name) => sea.selected === name && has(name);
+  const note = (text) => { if (!state.notes.includes(text)) state.notes.push(text); };
+
+  function status(text) {
+    const el = $('.depth-status');
+    if (!el) return;
+    el.textContent = text;
+    clearTimeout(status.timer);
+    status.timer = setTimeout(() => {
+      if ($('.depth-status')) $('.depth-status').textContent = 'Ripristina ossigeno e riporta il sottomarino in superficie';
+    }, 2400);
+  }
+
+  function renderInventoryDepth() {
+    const box = $('#inventoryItems');
+    box.innerHTML = state.inventory.length
+      ? state.inventory.map((item) => `<button class="inventory-item depth-inv ${sea.selected === item.name ? 'selected' : ''}" data-depth-item="${item.name}"><span>${item.icon}</span>${item.name}</button>`).join('')
+      : '<span class="empty">Vuoto</span>';
+    box.querySelectorAll('[data-depth-item]').forEach((button) => {
+      button.onclick = () => {
+        sea.selected = sea.selected === button.dataset.depthItem ? null : button.dataset.depthItem;
+        renderInventoryDepth();
+        status(sea.selected ? `${sea.selected} selezionato` : 'Oggetto deselezionato');
+      };
+    });
+  }
+
+  function addItem(name, icon) {
+    if (!has(name)) state.inventory.push({ name, icon });
+    renderInventoryDepth();
+  }
+
+  function removeItem(name) {
+    state.inventory = state.inventory.filter((item) => item.name !== name);
+    if (sea.selected === name) sea.selected = null;
+    renderInventoryDepth();
+  }
+
+  const hot = (id, label, solved = false) => `<button class="depth-hot depth-hit-${id} ${solved ? 'solved' : ''}" data-depth="${id}" aria-label="${label}"><span>${label}</span></button>`;
+
+  function drawDepthScene() {
+    const f = state.flags;
+    document.body.classList.add('depth-active');
+    $('#sceneBackdrop').style.background = 'transparent';
+    $('#sceneObjects').innerHTML = `<div class="depth-scene ${f.power ? 'power-on' : ''} ${f.oxygen ? 'oxygen-on' : ''} ${f.hatch ? 'hatch-open' : ''}">
+      <div class="depth-wall"></div><div class="depth-floor"></div>
+      <div class="depth-window"><div class="depth-creature"></div></div>
+      <div class="depth-sonar"><i></i><b>SONAR</b></div>
+      <div class="depth-clock">04:37</div>
+      <div class="depth-safe"><span>SETTORE 52</span></div>
+      <div class="depth-panel"><b>ENERGIA</b><i></i><i></i><i></i></div>
+      <div class="depth-valves"><i></i><i></i><i></i></div>
+      <div class="depth-console"><span>ASSETTO</span><div></div></div>
+      <div class="depth-hatch"><div class="wheel"></div></div>
+      <div class="depth-oxygen">O₂ ${f.oxygen ? 'STABILE' : '18%'}</div>
+      ${hot('sonar', 'Sonar', f.sonar)}${hot('clock', 'Orologio di bordo', f.clock)}${hot('safe', 'Cassaforte', f.safe)}${hot('panel', 'Quadro elettrico', f.panel)}${hot('valves', 'Valvole di zavorra', f.valves)}${hot('console', 'Console di assetto', f.console)}${hot('hatch', 'Camera stagna', f.hatch)}
+      <div class="depth-bubbles"></div><div class="depth-vignette"></div>
+      <div class="depth-status">Ripristina ossigeno e riporta il sottomarino in superficie</div>
+    </div>`;
+    document.querySelectorAll('[data-depth]').forEach((button) => button.onclick = () => inspectDepth(button.dataset.depth));
+  }
+
+  function startDepth() {
+    clearInterval(timerId);
+    state = { time: selected.minutes * 60, hints: 3, hintsUsed: 0, step: 0, inventory: [], notes: [], escaped: false, flags: {} };
+    sea.selected = null; sea.sonar = []; sea.switches = []; sea.valves = [];
+    $('#gameCase').textContent = 'CASO 06';
+    $('#gameTitle').textContent = 'Profondità Zero';
+    $('#hintCount').textContent = '3';
+    drawDepthScene(); renderInventoryDepth(); updateTimer(); show('game');
+    setTimeout(() => modal('<h2>Profondità Zero</h2><p>Il sottomarino è fermo sul fondale. Lo scafo geme, l’ossigeno è al 18% e il sonar rileva una presenza enorme oltre l’oblò.</p><button id="depthStart" class="action-btn">ENTRA NELLA SALA DI CONTROLLO</button>'), 60);
+    setTimeout(() => { const b = $('#depthStart'); if (b) b.onclick = closeModal; }, 120);
+    timerId = setInterval(() => {
+      if (state.time > 0 && !state.escaped) { state.time--; updateTimer(); }
+      else if (!state.escaped) { clearInterval(timerId); modal('<h2>Ossigeno esaurito</h2><p>Le luci si spengono mentre qualcosa urta lo scafo dall’esterno.</p><button id="depthRetry" class="action-btn">RIPROVA</button>'); setTimeout(() => { const b = $('#depthRetry'); if (b) b.onclick = () => { closeModal(); startDepth(); }; }, 0); }
+    }, 1000);
+  }
+
+  function inspectDepth(id) {
+    ({ sonar: sonarPuzzle, clock: clockPuzzle, safe: safePuzzle, panel: panelPuzzle, valves: valvesPuzzle, console: consolePuzzle, hatch: hatchPuzzle }[id] || (() => {}))();
+  }
+
+  function sonarPuzzle() {
+    if (state.flags.sonar) return modal('<h2>Sonar</h2><p>La traccia è decodificata: immersione 04:37, settore 52.</p>');
+    sea.sonar = [];
+    modal('<h2>Sonar</h2><p>Riproduci l’eco rilevato: <strong>breve – lungo – breve</strong>.</p><div class="depth-puzzle"><button data-sonar="B">•</button><button data-sonar="L">—</button><button data-sonar="B">•</button></div><p id="depthMsg"></p>');
+    setTimeout(() => document.querySelectorAll('[data-sonar]').forEach((b) => b.onclick = () => {
+      sea.sonar.push(b.dataset.sonar); b.disabled = true;
+      if (sea.sonar.length === 3) {
+        if (sea.sonar.join('') === 'BLB') { state.flags.sonar = true; state.step = 1; addItem('Diario di bordo', '📘'); note('Immersione 04:37, settore 52.'); drawDepthScene(); $('#depthMsg').innerHTML = '<span class="success">ECO DECODIFICATO</span>'; }
+        else { sea.sonar = []; document.querySelectorAll('[data-sonar]').forEach((x) => x.disabled = false); $('#depthMsg').innerHTML = '<span class="error">Sequenza errata.</span>'; }
+      }
+    }), 0);
+  }
+
+  function clockPuzzle() {
+    if (!has('Diario di bordo')) return modal('<h2>Orologio di bordo</h2><p>Il quadrante è bloccato. Serve prima un riferimento temporale.</p>');
+    if (state.flags.clock) return modal('<h2>Orologio di bordo</h2><p>Sincronizzato sulle 04:37.</p>');
+    modal('<h2>Sincronizzazione</h2><p>Inserisci l’ora dell’immersione senza i due punti.</p><div class="code-input"><input id="depthClock" inputmode="numeric" maxlength="4" placeholder="0000"><button id="depthClockBtn">SINCRONIZZA</button></div><p id="depthClockMsg"></p>');
+    setTimeout(() => $('#depthClockBtn').onclick = () => {
+      if ($('#depthClock').value === '0437') { state.flags.clock = true; state.step = 2; addItem('Chiave nautica', '🗝️'); note('L’orologio ha liberato una chiave nautica.'); drawDepthScene(); $('#depthClockMsg').innerHTML = '<span class="success">SINCRONIZZATO</span>'; }
+      else $('#depthClockMsg').innerHTML = '<span class="error">Orario errato.</span>';
+    }, 0);
+  }
+
+  function safePuzzle() {
+    if (state.flags.safe) return modal('<h2>Cassaforte</h2><p>È già stata svuotata.</p>');
+    if (!chosen('Chiave nautica')) return modal('<h2>Cassaforte</h2><p>Seleziona nell’inventario la chiave nautica.</p>');
+    removeItem('Chiave nautica'); state.flags.safe = true; state.step = 3; addItem('Schema elettrico', '📋'); note('Schema: interruttori 5 → 2 → 4. Valvole: sinistra → centro → destra.'); drawDepthScene();
+    modal('<h2>Cassaforte aperta</h2><p>Trovi lo schema dei sistemi di emergenza.</p><p class="tool-success">INTERRUTTORI 5–2–4<br>VALVOLE ← • →</p>');
+  }
+
+  function panelPuzzle() {
+    if (!has('Schema elettrico')) return modal('<h2>Quadro elettrico</h2><p>Tre circuiti sono fuori fase. Serve uno schema.</p>');
+    if (state.flags.panel) return modal('<h2>Quadro elettrico</h2><p>L’alimentazione ausiliaria è attiva.</p>');
+    sea.switches = [];
+    modal('<h2>Quadro elettrico</h2><p>Attiva gli interruttori nell’ordine corretto.</p><div class="depth-puzzle"><button data-switch="2">2</button><button data-switch="4">4</button><button data-switch="5">5</button></div><p id="depthSwitchMsg"></p>');
+    setTimeout(() => document.querySelectorAll('[data-switch]').forEach((b) => b.onclick = () => {
+      sea.switches.push(b.dataset.switch); b.disabled = true;
+      if (sea.switches.length === 3) {
+        if (sea.switches.join('') === '524') { state.flags.panel = true; state.flags.power = true; state.step = 4; addItem('Manovella', '⚙️'); note('Energia ripristinata. Il quadro ha espulso una manovella.'); drawDepthScene(); $('#depthSwitchMsg').innerHTML = '<span class="success">ENERGIA RIPRISTINATA</span>'; }
+        else { sea.switches = []; document.querySelectorAll('[data-switch]').forEach((x) => x.disabled = false); $('#depthSwitchMsg').innerHTML = '<span class="error">Sequenza errata.</span>'; }
+      }
+    }), 0);
+  }
+
+  function valvesPuzzle() {
+    if (!chosen('Manovella')) return modal('<h2>Valvole di zavorra</h2><p>Seleziona la manovella nell’inventario.</p>');
+    if (state.flags.valves) return modal('<h2>Valvole di zavorra</h2><p>La pressione è stabile.</p>');
+    sea.valves = [];
+    modal('<h2>Valvole di zavorra</h2><p>Segui lo schema: sinistra, centro, destra.</p><div class="depth-puzzle"><button data-valve="S">←</button><button data-valve="C">•</button><button data-valve="D">→</button></div><p id="depthValveMsg"></p>');
+    setTimeout(() => document.querySelectorAll('[data-valve]').forEach((b) => b.onclick = () => {
+      sea.valves.push(b.dataset.valve);
+      if (sea.valves.length === 3) {
+        if (sea.valves.join('') === 'SCD') { removeItem('Manovella'); state.flags.valves = true; state.step = 5; addItem('Scheda sonar', '💳'); note('Zavorra stabilizzata. Recuperata una scheda sonar.'); drawDepthScene(); $('#depthValveMsg').innerHTML = '<span class="success">PRESSIONE STABILE</span>'; }
+        else { sea.valves = []; $('#depthValveMsg').innerHTML = '<span class="error">Sequenza errata.</span>'; }
+      }
+    }), 0);
+  }
+
+  function consolePuzzle() {
+    if (!state.flags.power || !has('Scheda sonar')) return modal('<h2>Console di assetto</h2><p>Servono alimentazione e scheda sonar.</p>');
+    if (state.flags.console) return modal('<h2>Console di assetto</h2><p>Assetto e ossigeno sono stabili.</p>');
+    modal('<h2>Console di assetto</h2><p>Inserisci il settore seguito dalle ultime due cifre dell’orario.</p><div class="code-input"><input id="depthConsole" inputmode="numeric" maxlength="4" placeholder="0000"><button id="depthConsoleBtn">AVVIA RISALITA</button></div><p id="depthConsoleMsg"></p>');
+    setTimeout(() => $('#depthConsoleBtn').onclick = () => {
+      if ($('#depthConsole').value === '5237') { state.flags.console = true; state.flags.oxygen = true; state.step = 6; addItem('Badge camera stagna', '🪪'); note('Codice 5237 accettato. Ossigeno stabile e camera stagna autorizzata.'); drawDepthScene(); $('#depthConsoleMsg').innerHTML = '<span class="success">RISALITA AUTORIZZATA</span>'; }
+      else $('#depthConsoleMsg').innerHTML = '<span class="error">Codice non valido.</span>';
+    }, 0);
+  }
+
+  function hatchPuzzle() {
+    if (!state.flags.oxygen) return modal('<h2>Camera stagna</h2><p>La pressione non è ancora sicura.</p>');
+    if (!chosen('Badge camera stagna')) return modal('<h2>Camera stagna</h2><p>Seleziona il badge nell’inventario.</p>');
+    state.flags.hatch = true; drawDepthScene(); document.body.classList.remove('depth-active'); finish();
+  }
+
+  function depthHint() {
+    if (state.hints <= 0) return modal('<h2>Nessun indizio rimasto</h2><p>Controlla appunti e inventario.</p>');
+    const hints = ['Inizia dal sonar: breve, lungo, breve.', 'L’orario è 04:37.', 'Seleziona la chiave nautica e apri la cassaforte.', 'Lo schema indica 5–2–4.', 'Seleziona la manovella e usa ← • →.', 'Il codice console è 5237.', 'Seleziona il badge e apri la camera stagna.'];
+    state.hints--; state.hintsUsed++; $('#hintCount').textContent = state.hints; modal(`<h2>Indizio</h2><p>${hints[Math.min(state.step, hints.length - 1)]}</p>`);
+  }
+
+  document.addEventListener('click', (event) => {
+    if (!isDepth()) return;
+    const play = event.target.closest('#playBtn');
+    if (play) { event.preventDefault(); event.stopImmediatePropagation(); startDepth(); return; }
+    const hint = event.target.closest('#hintBtn');
+    if (hint && state) { event.preventDefault(); event.stopImmediatePropagation(); depthHint(); return; }
+    const notes = event.target.closest('#notesBtn');
+    if (notes && state) { event.preventDefault(); event.stopImmediatePropagation(); modal(`<h2>Appunti</h2>${state.notes.length ? '<ul>' + state.notes.map((n) => `<li>${n}</li>`).join('') + '</ul>' : '<p>Non hai ancora scoperto nulla.</p>'}`); }
+  }, true);
 })();
