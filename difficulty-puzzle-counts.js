@@ -14,12 +14,16 @@
     });
   }
 
-  /* Carica i veri enigmi aggiuntivi delle stanze intermedie.
-     Il parametro versione impedisce di usare una copia precedente. */
-  if (!document.querySelector('script[data-intermediate-final-puzzles]')) {
+  function loadIntermediateFinalPuzzles() {
+    if (document.querySelector('script[data-intermediate-final-puzzles]')) return;
     const script = document.createElement('script');
-    script.src = 'intermediate-final-puzzles.js?v=202608010759';
+    script.src = 'intermediate-final-puzzles.js?v=202608010801';
     script.dataset.intermediateFinalPuzzles = 'true';
-    document.head.appendChild(script);
+    document.body.appendChild(script);
   }
+
+  /* Attende che tutti i motori delle stanze abbiano finito di registrarsi,
+     poi applica il controllo finale senza essere sovrascritto. */
+  if (document.readyState === 'complete') loadIntermediateFinalPuzzles();
+  else window.addEventListener('load', loadIntermediateFinalPuzzles, { once: true });
 })();
