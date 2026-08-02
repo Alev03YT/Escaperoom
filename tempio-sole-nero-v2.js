@@ -1,0 +1,231 @@
+/* Tempio del Sole Nero V2 — motore indipendente, 8 enigmi reali */
+(() => {
+  const q = (s) => document.querySelector(s);
+  const temple = { selected: null, sequence: [] };
+  const isTemple = () => typeof selected !== 'undefined' && selected?.id === 'tempio';
+  const has = (name) => !!state?.inventory?.some((item) => item.name === name);
+  const chosen = (name) => temple.selected === name && has(name);
+  const remember = (text) => { if (state && !state.notes.includes(text)) state.notes.push(text); };
+
+  function inventory() {
+    const box = q('#inventoryItems');
+    if (!box || !state) return;
+    box.innerHTML = state.inventory.length
+      ? state.inventory.map((item) => `<button class="inventory-item temple2-item ${temple.selected === item.name ? 'selected' : ''}" data-temple2-item="${item.name}"><span>${item.icon}</span>${item.name}</button>`).join('')
+      : '<span class="empty">Vuoto</span>';
+    box.querySelectorAll('[data-temple2-item]').forEach((button) => {
+      button.onclick = () => {
+        temple.selected = temple.selected === button.dataset.temple2Item ? null : button.dataset.temple2Item;
+        inventory();
+      };
+    });
+  }
+
+  function add(name, icon) {
+    if (!has(name)) state.inventory.push({ name, icon });
+    inventory();
+  }
+
+  function remove(name) {
+    state.inventory = state.inventory.filter((item) => item.name !== name);
+    if (temple.selected === name) temple.selected = null;
+    inventory();
+  }
+
+  const hotspot = (id, solved) => `<button class="temple2-hot h-${id} ${solved ? 'done' : ''}" data-temple2="${id}" aria-label="${id}"></button>`;
+
+  function render() {
+    const f = state.flags;
+    document.body.classList.add('temple2-active');
+    q('#sceneBackdrop').style.background = 'transparent';
+    q('#sceneObjects').innerHTML = `
+      <div class="temple2">
+        <div class="temple2-sky"></div><div class="temple2-rays"></div><div class="temple2-eclipse"></div>
+        <div class="temple2-wall"></div><div class="temple2-column left"></div><div class="temple2-column right"></div><div class="temple2-floor"></div>
+        <div class="temple2-tablet"></div><div class="temple2-disk"></div><div class="temple2-idol"></div><div class="temple2-stars"></div>
+        <div class="temple2-urn"></div><div class="temple2-altar"></div><div class="temple2-gate"></div>
+        ${hotspot('tablet', f.tablet)}${hotspot('disk', f.disk)}${hotspot('idol', f.idol)}${hotspot('stars', f.stars)}
+        ${hotspot('urn', f.urn)}${hotspot('altar', f.altar)}${hotspot('eclipse', f.eclipse)}${hotspot('gate', f.gate)}
+        <div class="temple2-status">Esamina il tempio e ricostruisci il rito dell'eclissi</div>
+      </div>`;
+    q('.look-hint')?.style.setProperty('display', 'none', 'important');
+    q('#sceneObjects').querySelectorAll('[data-temple2]').forEach((button) => {
+      button.onclick = () => inspect(button.dataset.temple2);
+    });
+  }
+
+  function startTemple() {
+    if (!isTemple()) return;
+    clearInterval(timerId);
+    state = { time: 30 * 60, hints: 3, hintsUsed: 0, step: 0, inventory: [], notes: [], escaped: false, flags: {} };
+    temple.selected = null;
+    temple.sequence = [];
+    q('#gameCase').textContent = 'CASO 07';
+    q('#gameTitle').textContent = 'Tempio del Sole Nero';
+    q('#hintCount').textContent = '3';
+    render(); inventory(); updateTimer(); show('game');
+    modal('<h2>Tempio del Sole Nero</h2><p>Il passaggio è crollato alle tue spalle. Otto meccanismi separano il tempio dall’apertura del portale.</p><button id="temple2Intro" class="action-btn">ENTRA NEL SANTUARIO</button>');
+    setTimeout(() => { const b = q('#temple2Intro'); if (b) b.onclick = closeModal; }, 0);
+    timerId = setInterval(() => {
+      if (state.time > 0 && !state.escaped) { state.time--; updateTimer(); }
+      else if (!state.escaped) {
+        clearInterval(timerId);
+        modal('<h2>Il Sole Nero è sorto</h2><p>Le pareti del tempio si richiudono.</p><button id="temple2Retry" class="action-btn">RIPROVA</button>');
+        setTimeout(() => { const b = q('#temple2Retry'); if (b) b.onclick = () => { closeModal(); startTemple(); }; }, 0);
+      }
+    }, 1000);
+  }
+
+  function inspect(id) {
+    ({ tablet, disk, idol, stars, urn, altar, eclipse, gate }[id] || (() => {}))();
+  }
+
+  function tablet() {
+    if (state.flags.tablet) return modal('<h2>Tavola dei sacerdoti</h2><p>Tramonto 17:33 · dinastia 64 · guardiani: falco, serpente, sciacallo, scarabeo.</p>');
+    state.flags.tablet = true; state.step = 1;
+    add('Calco sacerdotale', '📜');
+    remember('Tramonto 17:33. Dinastia 64. Guardiani: falco → serpente → sciacallo → scarabeo.');
+    render();
+    modal('<h2>1. Tavola dei sacerdoti</h2><p>Ricalchi le iscrizioni prima che la pietra si sgretoli.</p><div class="clue">17:33 · DINASTIA 64<br>FALCO → SERPENTE → SCIACALLO → SCARABEO</div>');
+  }
+
+  function disk() {
+    if (!state.flags.tablet) return modal('<h2>Disco astronomico</h2><p>Gli anelli ruotano, ma manca un riferimento temporale.</p>');
+    if (state.flags.disk) return modal('<h2>Disco astronomico</h2><p>È già allineato alle 17:33.</p>');
+    modal('<h2>2. Allineamento astronomico</h2><p>Inserisci l’ora del tramonto senza i due punti.</p><div class="code-input"><input id="temple2Time" inputmode="numeric" maxlength="4" placeholder="0000"><button id="temple2TimeBtn">ALLINEA</button></div><p id="temple2Msg"></p>');
+    setTimeout(() => q('#temple2TimeBtn').onclick = () => {
+      if (q('#temple2Time').value === '1733') {
+        state.flags.disk = true; state.step = 2; add('Prisma d’ambra', '🔶');
+        remember('Il disco astronomico è allineato alle 17:33.'); render();
+        q('#temple2Msg').innerHTML = '<span class="success">Un prisma emerge dal centro del disco.</span>';
+      } else q('#temple2Msg').innerHTML = '<span class="error">Allineamento errato.</span>';
+    }, 0);
+  }
+
+  function idol() {
+    if (!state.flags.disk) return modal('<h2>Idolo dei guardiani</h2><p>I simboli sono al buio. Serve una sorgente di luce.</p>');
+    if (state.flags.idol) return modal('<h2>Idolo dei guardiani</h2><p>I quattro guardiani sono già attivi.</p>');
+    if (!chosen('Prisma d’ambra')) return modal('<h2>Idolo dei guardiani</h2><p>Seleziona il Prisma d’ambra nell’inventario.</p>');
+    temple.sequence = [];
+    modal('<h2>3. Ordine dei guardiani</h2><p>Premi i simboli nell’ordine inciso sulla tavola.</p><div class="temple2-grid"><button data-temple2-animal="F">🦅</button><button data-temple2-animal="S">🐍</button><button data-temple2-animal="C">🐺</button><button data-temple2-animal="B">🪲</button></div><p id="temple2Msg"></p>');
+    setTimeout(() => q('#modalContent').querySelectorAll('[data-temple2-animal]').forEach((button) => {
+      button.onclick = () => {
+        temple.sequence.push(button.dataset.temple2Animal);
+        if (temple.sequence.length === 4) {
+          if (temple.sequence.join('') === 'FSCB') {
+            remove('Prisma d’ambra'); state.flags.idol = true; state.step = 3; add('Occhio di ossidiana', '⚫');
+            remember('Guardiani attivati: falco, serpente, sciacallo, scarabeo.'); render();
+            q('#temple2Msg').innerHTML = '<span class="success">L’idolo apre un occhio nero.</span>';
+          } else { temple.sequence = []; q('#temple2Msg').innerHTML = '<span class="error">Ordine errato. I simboli si spengono.</span>'; }
+        }
+      };
+    }), 0);
+  }
+
+  function stars() {
+    if (!state.flags.idol) return modal('<h2>Volta stellare</h2><p>Le incisioni sono troppo deboli per essere lette.</p>');
+    if (state.flags.stars) return modal('<h2>Volta stellare</h2><p>La costellazione forma le cifre 6 e 4.</p>');
+    if (!chosen('Occhio di ossidiana')) return modal('<h2>Volta stellare</h2><p>Seleziona l’Occhio di ossidiana.</p>');
+    remove('Occhio di ossidiana'); state.flags.stars = true; state.step = 4; add('Coordinate dinastiche', '✦');
+    remember('La costellazione nascosta forma 6–4.'); render();
+    modal('<h2>4. Costellazione dinastica</h2><p>Guardando attraverso l’ossidiana le stelle compongono:</p><div class="clue">6 — 4</div>');
+  }
+
+  function urn() {
+    if (!state.flags.stars) return modal('<h2>Urna reale</h2><p>Il coperchio richiede il numero della dinastia.</p>');
+    if (state.flags.urn) return modal('<h2>Urna reale</h2><p>L’urna è già stata aperta.</p>');
+    modal('<h2>5. Urna della dinastia</h2><p>Inserisci le due cifre mostrate dalla costellazione.</p><div class="code-input"><input id="temple2Dyn" inputmode="numeric" maxlength="2" placeholder="00"><button id="temple2DynBtn">APRI</button></div><p id="temple2Msg"></p>');
+    setTimeout(() => q('#temple2DynBtn').onclick = () => {
+      if (q('#temple2Dyn').value === '64') {
+        state.flags.urn = true; state.step = 5; add('Scalpello rituale', '⛏️');
+        remember('L’urna della dinastia 64 conteneva uno scalpello rituale.'); render();
+        q('#temple2Msg').innerHTML = '<span class="success">Il coperchio si solleva.</span>';
+      } else q('#temple2Msg').innerHTML = '<span class="error">Dinastia errata.</span>';
+    }, 0);
+  }
+
+  function altar() {
+    if (!state.flags.urn) return modal('<h2>Altare centrale</h2><p>La lastra è sigillata e non puoi sollevarla a mani nude.</p>');
+    if (state.flags.altar) return modal('<h2>Altare centrale</h2><p>Il vano del sigillo è già aperto.</p>');
+    if (!chosen('Scalpello rituale')) return modal('<h2>Altare centrale</h2><p>Seleziona lo Scalpello rituale.</p>');
+    remove('Scalpello rituale'); state.flags.altar = true; state.step = 6; add('Sigillo del Sole Nero', '☀️');
+    remember('Sotto l’altare era nascosto il Sigillo del Sole Nero.'); render();
+    modal('<h2>6. Altare sigillato</h2><p>Lo scalpello libera una pietra circolare ancora calda.</p><p class="success">Hai ottenuto il Sigillo del Sole Nero.</p>');
+  }
+
+  function eclipse() {
+    if (!state.flags.altar) return modal('<h2>Corona dell’eclissi</h2><p>Al centro manca ancora il sigillo.</p>');
+    if (state.flags.eclipse) return modal('<h2>Corona dell’eclissi</h2><p>I quattro raggi sono già orientati.</p>');
+    if (!chosen('Sigillo del Sole Nero')) return modal('<h2>Corona dell’eclissi</h2><p>Seleziona il Sigillo del Sole Nero.</p>');
+    temple.sequence = [];
+    modal('<h2>7. Corona dell’eclissi</h2><p>Accendi i raggi dal più corto al più lungo. Le tacche indicano: 2, 4, 1, 3.</p><div class="temple2-grid">${[1,2,3,4].map((n) => `<button data-temple2-ray="${n}">${n}</button>`).join('')}</div><p id="temple2Msg"></p>');
+    setTimeout(() => q('#modalContent').querySelectorAll('[data-temple2-ray]').forEach((button) => {
+      button.onclick = () => {
+        temple.sequence.push(button.dataset.temple2Ray);
+        if (temple.sequence.length === 4) {
+          if (temple.sequence.join('') === '2413') {
+            remove('Sigillo del Sole Nero'); state.flags.eclipse = true; state.step = 7; add('Medaglione dell’eclissi', '🏅');
+            remember('Corona dell’eclissi attivata con 2–4–1–3.'); render();
+            q('#temple2Msg').innerHTML = '<span class="success">Il Sole Nero libera un medaglione.</span>';
+          } else { temple.sequence = []; q('#temple2Msg').innerHTML = '<span class="error">I raggi si spengono.</span>'; }
+        }
+      };
+    }), 0);
+  }
+
+  function gate() {
+    if (!state.flags.eclipse) return modal('<h2>Portale del tempio</h2><p>La corona dell’eclissi non è ancora attiva.</p>');
+    if (!chosen('Medaglione dell’eclissi')) return modal('<h2>Portale del tempio</h2><p>Seleziona il Medaglione dell’eclissi.</p>');
+    modal('<h2>8. Sigillo del portale</h2><p>Combina il numero della dinastia con i minuti del tramonto.</p><div class="code-input"><input id="temple2Final" inputmode="numeric" maxlength="4" placeholder="0000"><button id="temple2FinalBtn">APRI PORTALE</button></div><p id="temple2Msg"></p>');
+    setTimeout(() => q('#temple2FinalBtn').onclick = () => {
+      if (q('#temple2Final').value === '6433') {
+        state.flags.gate = true; state.escaped = true; clearInterval(timerId); render();
+        setTimeout(() => {
+          document.body.classList.remove('temple2-active');
+          q('.look-hint')?.style.removeProperty('display');
+          finish();
+        }, 500);
+      } else q('#temple2Msg').innerHTML = '<span class="error">Il portale rifiuta il codice.</span>';
+    }, 0);
+  }
+
+  function hint() {
+    if (state.hints <= 0) return modal('<h2>Nessun indizio rimasto</h2><p>Controlla appunti e inventario.</p>');
+    const hints = [
+      'Comincia dalla tavola di pietra a sinistra.',
+      'L’orario da inserire è 1733.',
+      'Seleziona il prisma e segui falco, serpente, sciacallo, scarabeo.',
+      'Seleziona l’occhio nero e osserva la volta stellare.',
+      'La costellazione indica 64.',
+      'Seleziona lo scalpello e usalo sull’altare.',
+      'La corona richiede 2, 4, 1, 3.',
+      'Il codice finale combina 64 e 33.'
+    ];
+    state.hints--; state.hintsUsed++; q('#hintCount').textContent = state.hints;
+    modal(`<h2>Indizio</h2><p>${hints[Math.min(state.step, hints.length - 1)]}</p>`);
+  }
+
+  document.addEventListener('click', (event) => {
+    if (!isTemple()) return;
+    const play = event.target.closest('#playBtn');
+    if (play) {
+      event.preventDefault(); event.stopImmediatePropagation(); startTemple();
+      return;
+    }
+    if (!document.body.classList.contains('temple2-active')) return;
+    const hintButton = event.target.closest('#hintBtn');
+    if (hintButton) {
+      event.preventDefault(); event.stopImmediatePropagation(); hint();
+      return;
+    }
+    const notesButton = event.target.closest('#notesBtn');
+    if (notesButton) {
+      event.preventDefault(); event.stopImmediatePropagation();
+      modal(`<h2>Appunti</h2>${state.notes.length ? '<ul>' + state.notes.map((note) => `<li>${note}</li>`).join('') + '</ul>' : '<p>Nessun appunto.</p>'}`);
+    }
+  }, true);
+
+  q('#exitBtn')?.addEventListener('click', () => {
+    if (document.body.classList.contains('temple2-active')) document.body.classList.remove('temple2-active');
+  }, true);
+})();
