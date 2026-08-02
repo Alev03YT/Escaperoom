@@ -2,28 +2,35 @@
    Facile 5 · Intermedio 6 · Difficile 8 · Incubo 10 */
 (() => {
   if (typeof rooms !== 'undefined' && Array.isArray(rooms)) {
-    const counts = {
-      easy: 5,
-      medium: 6,
-      hard: 8,
-      nightmare: 10
-    };
-
-    rooms.forEach(room => {
-      room.puzzles = counts[room.difficulty] ?? room.puzzles;
-    });
+    const counts = { easy: 5, medium: 6, hard: 8, nightmare: 10 };
+    rooms.forEach(room => { room.puzzles = counts[room.difficulty] ?? room.puzzles; });
   }
 
-  function loadIntermediateFinalPuzzles() {
-    if (document.querySelector('script[data-intermediate-final-puzzles]')) return;
+  function loadScriptOnce(src, marker) {
+    if (document.querySelector(`script[data-${marker}]`)) return;
     const script = document.createElement('script');
-    script.src = 'intermediate-final-puzzles.js?v=202608010801';
-    script.dataset.intermediateFinalPuzzles = 'true';
+    script.src = src;
+    script.dataset[marker] = 'true';
     document.body.appendChild(script);
   }
 
-  /* Attende che tutti i motori delle stanze abbiano finito di registrarsi,
-     poi applica il controllo finale senza essere sovrascritto. */
-  if (document.readyState === 'complete') loadIntermediateFinalPuzzles();
-  else window.addEventListener('load', loadIntermediateFinalPuzzles, { once: true });
+  function loadStyleOnce(href, marker) {
+    if (document.querySelector(`link[data-${marker}]`)) return;
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = href;
+    link.dataset[marker] = 'true';
+    document.head.appendChild(link);
+  }
+
+  function loadFinalRooms() {
+    loadScriptOnce('intermediate-final-puzzles.js?v=202608010801', 'intermediateFinalPuzzles');
+    loadStyleOnce('nave-eos-v1.css?v=202608022205', 'naveEosStyle');
+    loadScriptOnce('nave-eos-v1.js?v=202608022205', 'naveEosEngine');
+  }
+
+  /* I motori dedicati vengono caricati per ultimi, così intercettano
+     il pulsante prima del motore generico della stanza. */
+  if (document.readyState === 'complete') loadFinalRooms();
+  else window.addEventListener('load', loadFinalRooms, { once: true });
 })();
