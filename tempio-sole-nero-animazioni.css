@@ -1,0 +1,67 @@
+/* Tempio del Sole Nero — animazioni e rifiniture cinematografiche */
+body.temple2-active .scene{background:#080504}
+body.temple2-active .temple2{perspective:900px;animation:templeEntrance .9s cubic-bezier(.2,.8,.2,1) both}
+body.temple2-active .temple2:before,body.temple2-active .temple2:after{content:"";position:absolute;inset:-10%;pointer-events:none;z-index:8}
+body.temple2-active .temple2:before{background:radial-gradient(circle at 18% 75%,rgba(255,174,74,.16),transparent 18%),radial-gradient(circle at 78% 70%,rgba(255,147,47,.13),transparent 20%),radial-gradient(circle at 50% 30%,rgba(255,202,116,.08),transparent 26%);filter:blur(8px);animation:torchFlicker 3.4s ease-in-out infinite alternate}
+body.temple2-active .temple2:after{background-image:radial-gradient(circle,rgba(255,211,138,.72) 0 1px,transparent 1.6px),radial-gradient(circle,rgba(255,144,55,.45) 0 1px,transparent 1.8px);background-size:67px 67px,103px 103px;background-position:0 0,31px 17px;opacity:.3;animation:dustRise 16s linear infinite}
+.temple2-sky{animation:skyPulse 7s ease-in-out infinite alternate}
+.temple2-eclipse{animation:eclipsePulse 3.6s ease-in-out infinite, eclipseFloat 9s ease-in-out infinite;will-change:transform,box-shadow}
+.temple2-rays{animation:raysRotate 24s linear infinite,rayBreath 4s ease-in-out infinite alternate;transform-origin:50% 34%}
+.temple2-wall{animation:wallBreath 6s ease-in-out infinite alternate}
+.temple2-column.left{animation:columnLeft 7s ease-in-out infinite alternate}
+.temple2-column.right{animation:columnRight 7s ease-in-out infinite alternate}
+.temple2-floor:before{content:"";position:absolute;left:9%;right:9%;bottom:4%;height:46%;background:linear-gradient(90deg,transparent,rgba(227,139,56,.16),transparent);clip-path:polygon(0 100%,50% 0,100% 100%);filter:blur(8px);animation:floorGlow 4.5s ease-in-out infinite alternate}
+.temple2-tablet{transition:transform .25s ease,filter .25s ease;animation:tabletDust 5s ease-in-out infinite alternate}
+.temple2-disk{animation:diskRotate 18s linear infinite;transition:filter .3s ease,transform .3s ease}
+.temple2-disk:before{content:"";position:absolute;inset:-16%;border-radius:50%;border:1px solid rgba(255,184,83,.26);box-shadow:0 0 26px rgba(255,130,30,.22);animation:ringPulse 2.8s ease-in-out infinite}
+.temple2-idol{animation:idolSway 6s ease-in-out infinite;transform-origin:50% 100%}
+.temple2-idol:after{content:"";position:absolute;left:34%;right:34%;top:21%;height:8%;border-radius:50%;background:#ff9d3b;box-shadow:0 0 12px #ff7b22,0 0 22px #ff6b16;opacity:.15;animation:idolEye 4.2s ease-in-out infinite}
+.temple2-stars{animation:starsTwinkle 2.7s ease-in-out infinite alternate}
+.temple2-urn{animation:urnHover 5s ease-in-out infinite;transition:transform .25s ease,filter .25s ease}
+.temple2-altar{animation:altarPulse 4.6s ease-in-out infinite alternate}
+.temple2-gate{overflow:hidden;animation:gateBreath 5s ease-in-out infinite alternate;transition:filter .35s ease}
+.temple2-gate:before{content:"";position:absolute;inset:8% 13%;background:repeating-linear-gradient(0deg,transparent 0 14%,rgba(241,168,75,.09) 14.5% 15.5%);animation:runeScroll 8s linear infinite}
+.temple2-gate:after{animation:gateSymbol 2.8s ease-in-out infinite}
+.temple2-status{backdrop-filter:blur(8px);box-shadow:0 6px 24px rgba(0,0,0,.38),0 0 22px rgba(217,128,42,.12);animation:statusPulse 3.2s ease-in-out infinite alternate}
+.temple2-hot{cursor:pointer;-webkit-tap-highlight-color:transparent}
+.temple2-hot:focus-visible{outline:2px solid #ffc978;outline-offset:3px}
+.temple2-hot:not(.done):active+*{filter:brightness(1.12)}
+.temple2-hot.done:after{animation:solvedPop .45s cubic-bezier(.2,1.5,.3,1) both,solvedGlow 2s ease-in-out infinite alternate}
+.temple2-item{transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease}
+.temple2-item:active{transform:scale(.96)}
+.temple2-item.selected{animation:selectedItem 1.5s ease-in-out infinite alternate}
+.temple2-grid button{position:relative;overflow:hidden;transition:transform .16s ease,filter .16s ease,box-shadow .16s ease}
+.temple2-grid button:active{transform:scale(.92);filter:brightness(1.25)}
+.temple2-grid button:after{content:"";position:absolute;inset:0;background:linear-gradient(115deg,transparent 20%,rgba(255,255,255,.22),transparent 80%);transform:translateX(-120%)}
+.temple2-grid button:hover:after,.temple2-grid button:focus-visible:after{animation:buttonShine .7s ease}
+.temple2-active .modal-card{box-shadow:0 18px 60px rgba(0,0,0,.7),0 0 35px rgba(206,118,36,.15)}
+@keyframes templeEntrance{from{opacity:0;transform:scale(1.04) translateY(12px);filter:blur(8px)}to{opacity:1;transform:none;filter:none}}
+@keyframes torchFlicker{0%{opacity:.55;transform:scale(1)}25%{opacity:.8}50%{opacity:.48;transform:scale(1.015)}75%{opacity:.72}100%{opacity:.58;transform:scale(.99)}}
+@keyframes dustRise{from{transform:translate3d(0,8%,0)}to{transform:translate3d(-4%,-8%,0)}}
+@keyframes skyPulse{from{filter:brightness(.85) saturate(.9)}to{filter:brightness(1.12) saturate(1.18)}}
+@keyframes eclipsePulse{0%,100%{box-shadow:0 0 0 8px #a95c20,0 0 34px 10px rgba(255,125,28,.45)}50%{box-shadow:0 0 0 9px #d47b29,0 0 58px 22px rgba(255,125,28,.75)}}
+@keyframes eclipseFloat{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(-5px)}}
+@keyframes raysRotate{to{rotate:360deg}}
+@keyframes rayBreath{from{opacity:.38}to{opacity:.8}}
+@keyframes wallBreath{from{filter:brightness(.92)}to{filter:brightness(1.08)}}
+@keyframes columnLeft{from{transform:translateX(0)}to{transform:translateX(2px)}}
+@keyframes columnRight{from{transform:translateX(0)}to{transform:translateX(-2px)}}
+@keyframes floorGlow{from{opacity:.25;transform:scaleX(.9)}to{opacity:.75;transform:scaleX(1.08)}}
+@keyframes tabletDust{from{filter:brightness(.92)}to{filter:brightness(1.08) drop-shadow(0 0 8px rgba(244,174,87,.25))}}
+@keyframes diskRotate{to{transform:rotate(360deg)}}
+@keyframes ringPulse{0%,100%{opacity:.2;transform:scale(.96)}50%{opacity:.7;transform:scale(1.05)}}
+@keyframes idolSway{0%,100%{transform:rotate(-.35deg)}50%{transform:rotate(.35deg)}}
+@keyframes idolEye{0%,75%,100%{opacity:.12}82%,88%{opacity:1}}
+@keyframes starsTwinkle{from{filter:brightness(.65);opacity:.65}to{filter:brightness(1.45) drop-shadow(0 0 7px #ffb34f);opacity:1}}
+@keyframes urnHover{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+@keyframes altarPulse{from{filter:brightness(.92)}to{filter:brightness(1.16) drop-shadow(0 0 10px rgba(244,151,62,.26))}}
+@keyframes gateBreath{from{filter:brightness(.88)}to{filter:brightness(1.12)}}
+@keyframes runeScroll{from{background-position:0 0}to{background-position:0 120px}}
+@keyframes gateSymbol{0%,100%{text-shadow:0 0 10px #e79036;transform:scale(.96)}50%{text-shadow:0 0 26px #ffb151,0 0 44px #ff7d21;transform:scale(1.05)}}
+@keyframes statusPulse{from{border-color:#7c4821}to{border-color:#d98a3d}}
+@keyframes solvedPop{from{opacity:0;transform:scale(.2) rotate(-30deg)}to{opacity:1;transform:scale(1) rotate(0)}}
+@keyframes solvedGlow{from{box-shadow:0 0 5px rgba(240,180,97,.2)}to{box-shadow:0 0 16px rgba(240,180,97,.75)}}
+@keyframes selectedItem{from{transform:translateY(0)}to{transform:translateY(-2px)}}
+@keyframes buttonShine{to{transform:translateX(120%)}}
+@media(max-width:600px){.temple2:after{background-size:82px 82px,126px 126px;opacity:.22}.temple2-rays{width:70%}.temple2-status{bottom:1.2%;padding:7px 11px}.temple2-eclipse{animation-duration:4s,10s}.temple2-disk{animation-duration:22s}}
+@media(prefers-reduced-motion:reduce){.temple2,.temple2 *,.temple2:before,.temple2:after{animation-duration:.001ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important}}
