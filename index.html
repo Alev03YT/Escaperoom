@@ -3,49 +3,38 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#080b10">
-  <title>EscapeVerse — Nuovo inizio</title>
-  <link rel="stylesheet" href="escape-reset.css?v=202608030500">
+  <meta name="theme-color" content="#08090d">
+  <title>EscapeVerse 2.0 — La Villa Abbandonata</title>
+  <link rel="stylesheet" href="villa-v2.css?v=202608030603">
 </head>
 <body>
   <section id="home" class="screen home active">
-    <header class="top"><div class="logo">ESCAPEVERSE</div><div class="badge">NUOVO INIZIO</div></header>
-    <main>
-      <section class="hero">
-        <small>VERSIONE RICOSTRUITA DA ZERO</small>
-        <h1>Una stanza.<br><span>Fatta bene.</span></h1>
-        <p>Il vecchio catalogo è stato rimosso dal sito. Da ora aggiungiamo una stanza alla volta, senza motori sovrapposti e senza versioni in conflitto.</p>
-      </section>
-      <article class="room-card">
-        <div class="cover"></div>
-        <div class="room-info">
-          <span class="badge">FACILE</span>
-          <h2>L’Ufficio Chiuso</h2>
-          <p>Un ufficio abbandonato, una porta bloccata e quattro passaggi logici concatenati.</p>
-          <div class="meta"><span>⏱ 12 minuti</span><span>🧩 4 enigmi</span><span>💡 3 indizi</span></div>
-          <button id="openRoom" class="primary">APRI LA STANZA</button>
-        </div>
-      </article>
-    </main>
+    <div class="panel">
+      <div class="eyebrow">ESCAPEVERSE 2.0 · NUOVO INIZIO</div>
+      <h1>Una stanza.<br><span>Un vero caso.</span></h1>
+      <p>Il vecchio catalogo non viene più caricato. Da ora ogni escape room viene costruita e testata singolarmente.</p>
+      <div class="meta"><span>🏚️ Villa realistica</span><span>⏱ 15 minuti</span><span>🧩 4 macro-enigmi</span></div>
+      <button id="openRoom" class="primary">APRI IL CASO 01</button>
+    </div>
   </section>
 
   <section id="briefing" class="screen briefing">
-    <div class="brief-card">
-      <button id="backHome" class="back">← Torna indietro</button>
-      <span class="badge">CASO 01 · FACILE</span>
-      <h1>L’Ufficio Chiuso</h1>
-      <p>Ti svegli in un piccolo ufficio senza finestre. La serratura elettronica è attiva, ma nella stanza sono rimasti un quadro, un orologio e una scrivania.</p>
-      <p>Completa i quattro enigmi prima che il timer raggiunga zero.</p>
-      <div class="meta"><span>12 minuti</span><span>4 enigmi</span><span>3 indizi</span></div>
-      <button id="play" class="primary">INIZIA LA FUGA</button>
+    <div class="panel">
+      <button id="backHome" class="back">← Torna al menu</button>
+      <div class="eyebrow">CASO 01 · FACILE</div>
+      <h1>La Villa<br><span>Abbandonata</span></h1>
+      <p>L’investigatore Ricci è entrato nella villa tre giorni fa e non è più uscito. La polizia la sigillerà tra quindici minuti.</p>
+      <p>Ricostruisci i suoi ultimi movimenti, trova il diario e apri il passaggio segreto.</p>
+      <div class="meta"><span>15 minuti</span><span>4 enigmi concatenati</span><span>3 indizi</span></div>
+      <button id="play" class="primary">ENTRA NELLA VILLA</button>
     </div>
   </section>
 
   <section id="game" class="screen game">
     <header class="game-head">
-      <button id="exit" class="exit">✕</button>
-      <div class="titlebox"><small>CASO 01</small><strong>L’Ufficio Chiuso</strong></div>
-      <div id="timer" class="timer">12:00</div>
+      <button id="exit" class="exit" aria-label="Esci">✕</button>
+      <div class="titlebox"><small>CASO 01</small><strong>La Villa Abbandonata</strong></div>
+      <div id="timer" class="timer">15:00</div>
     </header>
     <main class="scene"><div id="roomObjects"></div></main>
     <aside class="inventory"><small>INVENTARIO</small><div id="items" class="items"></div></aside>
@@ -53,17 +42,16 @@
   </section>
 
   <section id="ending" class="screen ending">
-    <div class="end-card">
-      <div class="trophy">🏆</div>
-      <span class="badge">FUGA COMPLETATA</span>
-      <h1>Porta aperta</h1>
-      <p>Hai completato tutti e quattro gli enigmi della prima nuova stanza.</p>
-      <p>Tempo impiegato: <strong id="finalTime">00:00</strong></p>
+    <div class="panel">
+      <div class="eyebrow">FUGA COMPLETATA</div>
+      <h1>Passaggio<br><span>aperto.</span></h1>
+      <p>Hai recuperato il diario dell’investigatore e scoperto l’uscita nascosta dietro la libreria.</p>
+      <div class="meta"><span>Tempo impiegato: <strong id="finalTime">00:00</strong></span></div>
       <button id="endingHome" class="primary">TORNA AL MENU</button>
     </div>
   </section>
 
   <div id="modal" class="modal hidden"><div class="modal-card"><button id="closeModal" class="close">×</button><div id="modalContent"></div></div></div>
-  <script src="escape-reset.js?v=202608030500"></script>
+  <script src="villa-v2.js?v=202608030603"></script>
 </body>
 </html>
